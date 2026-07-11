@@ -38,7 +38,7 @@
 .res-score { font-size: 24rpx; color: var(--muted); margin-top: 10rpx; }
 .lv-low .res-level { color: var(--sage); }
 .lv-medium .res-level { color: #C08A2D; }
-.lv-high .res-level { color: var(--apricot-deep); }
+.lv-high .res-level { color: #d97b3f; }
 .lv-critical .res-level { color: var(--danger); }
 
 .sec { margin-top: 20rpx; padding: 28rpx; }

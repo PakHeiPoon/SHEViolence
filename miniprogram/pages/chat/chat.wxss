@@ -36,8 +36,8 @@
 .card-row { display: flex; justify-content: flex-start; margin: -4rpx 0 18rpx; }
 .concl-card {
   max-width: 82%;
-  background: linear-gradient(135deg, #FFF7EE, #FCEEDC);
-  border: 2rpx solid var(--apricot);
+  background: #f3f1ff;
+  border: 1rpx solid #d7ccff;
   border-radius: 24rpx;
   padding: 22rpx 24rpx;
   box-shadow: var(--shadow);
@@ -48,7 +48,7 @@
 .cc-btn {
   flex: 1; text-align: center; font-size: 24rpx; font-weight: 600;
   padding: 14rpx 0; border-radius: 999rpx;
-  background: var(--surface); color: var(--apricot-deep); border: 2rpx solid var(--apricot);
+  background: #fff; color: var(--apricot-deep); border: 1rpx solid #d7ccff;
 }
 .cc-btn.done { background: var(--sage-soft); color: var(--sage); border-color: var(--sage); }
 .cc-btn.cc-sos { background: var(--danger); color: #FFF6F2; border-color: var(--danger); }

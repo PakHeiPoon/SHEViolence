@@ -2,7 +2,7 @@
 
   <!-- 匿名身份 -->
   <view class="id-card card fade-up">
-    <view class="avatar">🌤</view>
+    <image class="avatar" src="/static/avatar.png" mode="aspectFill" />
     <view class="id-texts">
       <view class="id-name">{{nickname}}</view>
       <view class="id-sub">随机匿名身份 · 不关联任何真实信息</view>

@@ -55,7 +55,7 @@ Page({
       wx.setStorageSync('chat_disclaimer_shown', true)
       wx.showModal({
         title: '温柔的提醒',
-        content: '暖暖是 AI 伙伴，能陪伴你、提供参考信息，但不能替代专业的法律、医疗与心理援助。紧急情况请直接拨打 110 或 12338。对话仅保存在你的手机本地。',
+        content: '暖芽是 AI 伙伴，能陪伴你、提供参考信息，但不能替代专业的法律、医疗与心理援助。紧急情况请直接拨打 110 或 12338。对话仅保存在你的手机本地。',
         showCancel: false,
         confirmText: '我知道了'
       })
@@ -127,7 +127,7 @@ Page({
     this.setData({
       messages,
       inputValue: '', imagePath: '', aiTyping: true,
-      agentStatus: image ? '👀 暖暖正在看你发的照片…' : '💛 暖暖正在认真想…',
+      agentStatus: image ? '👀 暖芽正在看你发的照片…' : '💛 暖芽正在认真想…',
       crisisLevel: Math.max(this.data.crisisLevel, crisis.level),
       toView: 'anchor-bottom'
     })
@@ -182,7 +182,7 @@ Page({
     const msg = this.data.messages[idx]
     if (!msg || !msg.card || msg.card.saved) return
     const list = wx.getStorageSync('evidence_list') || []
-    const item = { id: 'adv' + Date.now(), type: 'text', date: util.todayStr(), title: '💡 暖暖的建议', desc: msg.content, tag: '建议' }
+    const item = { id: 'adv' + Date.now(), type: 'text', date: util.todayStr(), title: '💡 暖芽的建议', desc: msg.content, tag: '建议' }
     wx.setStorageSync('evidence_list', [item].concat(list))
     const messages = this.data.messages.map((m, i) =>
       i === idx ? Object.assign({}, m, { card: Object.assign({}, m.card, { saved: true }) }) : m

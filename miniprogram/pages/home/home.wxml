@@ -21,11 +21,11 @@
   <view class="grid fade-up delay-2">
     <view class="cell" hover-class="cell-hover" bindtap="goChat">
       <view class="cell-icon bg-apricot">💬</view>
-      <view class="cell-name">暖暖倾诉</view>
+      <view class="cell-name">暖芽倾诉</view>
       <view class="cell-desc">陪伴你，随时听</view>
     </view>
     <view class="cell" hover-class="cell-hover" bindtap="goLegal">
-      <view class="cell-icon bg-sage">⚖️</view>
+      <view class="cell-icon bg-amber">⚖️</view>
       <view class="cell-name">法律问答</view>
       <view class="cell-desc">依据法条与案例</view>
     </view>
@@ -35,7 +35,7 @@
       <view class="cell-desc">3 分钟评估处境</view>
     </view>
     <view class="cell" hover-class="cell-hover" bindtap="goEvidence">
-      <view class="cell-icon bg-apricot">📁</view>
+      <view class="cell-icon bg-rose">📁</view>
       <view class="cell-name">我的记录</view>
       <view class="cell-desc">证据整理与保管</view>
     </view>

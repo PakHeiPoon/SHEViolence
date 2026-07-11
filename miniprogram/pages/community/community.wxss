@@ -58,12 +58,12 @@
   width: 96rpx;
   height: 96rpx;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--apricot), var(--apricot-deep));
+  background: var(--ink);
   color: #fff;
   font-size: 40rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8rpx 24rpx rgba(201, 114, 47, 0.35);
+  box-shadow: 0 14rpx 36rpx rgba(28, 25, 31, 0.25);
   z-index: 998;
 }

@@ -39,7 +39,7 @@
 /* 时间线 */
 .tl-head { display: flex; align-items: center; justify-content: space-between; margin: 36rpx 4rpx 16rpx; }
 .tl-title { font-size: 30rpx; font-weight: 700; }
-.gen-btn { font-size: 24rpx; font-weight: 600; color: #FFFDF7; background: linear-gradient(135deg, var(--apricot), var(--apricot-deep)); padding: 12rpx 24rpx; border-radius: 999rpx; }
+.gen-btn { font-size: 24rpx; font-weight: 700; color: #fff; background: var(--ink); padding: 12rpx 26rpx; border-radius: 44rpx; }
 .gen-btn.busy { opacity: 0.7; }
 
 /* 书面陈述模态 */

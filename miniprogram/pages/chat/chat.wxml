@@ -3,7 +3,7 @@
   <!-- 顶部会话栏 -->
   <view class="topbar">
     <view class="tb-btn" bindtap="openSessions">☰ 会话</view>
-    <view class="tb-title">暖暖</view>
+    <view class="tb-title">暖芽</view>
     <view class="tb-btn tb-new" bindtap="newSession">＋ 新对话</view>
   </view>
 
@@ -24,8 +24,8 @@
   <!-- 消息区 -->
   <scroll-view class="msgs" scroll-y scroll-into-view="{{toView}}" scroll-with-animation>
     <view class="welcome" wx:if="{{messages.length === 0}}">
-      <view class="w-emoji">🌿</view>
-      <view class="w-title">你好，我是暖暖</view>
+      <image class="w-mascot" src="/static/mascot.png" mode="aspectFit" />
+      <view class="w-title">你好，我是暖芽</view>
       <view class="w-sub">这里很安全，你可以慢慢说，我会一直在。</view>
       <view class="chips">
         <view class="chip" wx:for="{{chips}}" wx:key="*this" bindtap="tapChip" data-text="{{item}}">{{item}}</view>

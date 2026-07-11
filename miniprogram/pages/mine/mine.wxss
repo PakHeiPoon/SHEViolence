@@ -7,10 +7,6 @@
   height: 104rpx;
   border-radius: 50%;
   background: var(--apricot-soft);
-  font-size: 52rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 .id-texts { flex: 1; }
 .id-name { font-size: 36rpx; font-weight: 800; }

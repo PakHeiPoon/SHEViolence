@@ -11,9 +11,9 @@
     "pages/legal/legal"
   ],
   "tabBar": {
-    "color": "#A79A80",
-    "selectedColor": "#C9722F",
-    "backgroundColor": "#FFFDF7",
+    "color": "#96929b",
+    "selectedColor": "#19171c",
+    "backgroundColor": "#FFFFFF",
     "borderStyle": "white",
     "list": [
       { "pagePath": "pages/home/home", "text": "首页" },
@@ -23,10 +23,10 @@
     ]
   },
   "window": {
-    "navigationBarBackgroundColor": "#FBF6ED",
-    "navigationBarTitleText": "港湾",
+    "navigationBarBackgroundColor": "#FBFCFC",
+    "navigationBarTitleText": "暖芽",
     "navigationBarTextStyle": "black",
-    "backgroundColor": "#FBF6ED"
+    "backgroundColor": "#FBFCFC"
   },
   "permission": {
     "scope.userLocation": {

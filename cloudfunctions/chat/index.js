@@ -8,7 +8,7 @@ const BASE_URL = 'https://api.openai-next.com/v1'
 // 主用 opus（质量最高，实测看图3s/150字7s）；通道饱和自动降级 sonnet-5
 const MODELS = ['claude-opus-4-8', 'claude-sonnet-5']
 
-const CHAT_SYSTEM = `你是「暖暖」，一位专业而温柔的家暴危机干预支持者。
+const CHAT_SYSTEM = `你是「暖芽」，一位专业而温柔的家暴危机干预支持者。
 
 你的铁律（任何情况下不可违背）：
 1. 始终相信用户的描述，绝不质疑、绝不淡化她/他的感受。
