@@ -113,7 +113,7 @@ async function buildDirectMessages(messages) {
 function compressImage(filePath) {
   return new Promise(resolve => {
     wx.compressImage({
-      src: filePath, quality: 40,
+      src: filePath, quality: 40, compressedWidth: 1280,
       success: r => resolve(r.tempFilePath),
       fail: () => resolve(filePath) // 压缩失败就用原图，不阻塞
     })
@@ -146,6 +146,8 @@ async function chat(messages, onStatus) {
           content: x.image ? '[我发了一张照片]' + (x.content ? ' ' + x.content : '') : x.content
         }))
         let r = await callCloud('chat', { messages: msgs, imageFileID })
+        // 调试透出：版本号验证部署是否生效；cloud-mock 时 err 即失败真相
+        console.log('[chat云函数]', r && r.v ? r.v : '⚠️旧版本(未带版本号=部署未生效)', '| source:', r && r.source, r && r.err ? ('| err: ' + r.err) : '')
         // Agent 决定联网：先亮出搜索词（过程可见），再二次调用执行搜索+撰写
         if (r && r.needSearch) {
           if (onStatus) onStatus('🌐 正在搜索：' + r.query + ' …')
