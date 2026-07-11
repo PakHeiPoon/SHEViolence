@@ -12,8 +12,12 @@ function extractCard(reply) {
   const m = reply.match(/\[\[CARD[:：]([\s\S]+?)\]\]/) // 兼容半角/全角冒号
   const text = util.stripMd(reply) // 清 markdown + 兜底剔除卡片标记
   if (m) return { text, card: { summary: util.stripMd(m[1]), saved: false } }
+  // 兜底出卡收紧：过程话（"我来搜索/查一下/稍等"）绝不出卡；太短的也不出（没有可执行内容）
+  const isProcess = /(搜索|查询|查一下|搜一下|稍等|帮你查|我来搜|我去查)/.test(text)
   const hit = STRONG_HINTS.some(w => text.indexOf(w) > -1)
-  const card = hit ? { summary: text.length > 64 ? text.slice(0, 62) + '…' : text, saved: false } : null
+  const card = (!isProcess && hit && text.length >= 60)
+    ? { summary: text.length > 64 ? text.slice(0, 62) + '…' : text, saved: false }
+    : null
   return { text, card }
 }
 
