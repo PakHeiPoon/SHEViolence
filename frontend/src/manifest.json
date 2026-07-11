@@ -1,0 +1,22 @@
+{
+  "name": "暖芽记事",
+  "appid": "",
+  "description": "互助求助平台(低保真原型)",
+  "versionName": "0.1.0",
+  "versionCode": "100",
+  "vueVersion": "3",
+  "mp-weixin": {
+    "appid": "wxa1d2dab09fbf6a15",
+    "setting": {
+      "urlCheck": false
+    },
+    "usingComponents": true,
+    "permission": {
+      "scope.userLocation": {
+        "desc": "紧急求助时用于向你展示当前位置，便于告知救助人员"
+      }
+    },
+    "requiredPrivateInfos": ["getLocation"],
+    "lazyCodeLoading": "requiredComponents"
+  }
+}

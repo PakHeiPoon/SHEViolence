@@ -1,4 +1,0 @@
-<view class="esc" hover-class="esc-hover" bindtap="go" aria-label="快速离开，返回记账本">
-  <view class="esc-line">快速</view>
-  <view class="esc-line">离开</view>
-</view>

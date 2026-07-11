@@ -1,6 +1,0 @@
-{
-  "navigationBarTitleText": "港湾",
-  "usingComponents": {
-    "escape-btn": "/components/escape-btn/escape-btn"
-  }
-}

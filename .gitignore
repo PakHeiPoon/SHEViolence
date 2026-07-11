@@ -1,8 +1,12 @@
 # 依赖
 node_modules/
 
+# miniprogram/ 现在是 frontend(uni-app) 的编译产物，源码在 frontend/src，勿手改
+miniprogram/
+frontend/dist/
+
 # 密钥配置（绝不提交！队友请复制对应 example 文件后自行填写）
-miniprogram/config/config.js
+frontend/src/services/config.js
 rag/config.local.js
 .env
 .env.*

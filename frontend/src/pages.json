@@ -1,0 +1,25 @@
+{
+  "pages": [
+    { "path": "pages/disguise/disguise", "style": { "navigationBarTitleText": "随手记" } },
+    { "path": "pages/home/home", "style": { "navigationStyle": "custom", "backgroundColor": "#FBFCFC" } },
+    { "path": "pages/chat/chat", "style": { "navigationStyle": "custom", "backgroundColor": "#FBFCFC" } },
+    { "path": "pages/community/community", "style": { "navigationStyle": "custom", "backgroundColor": "#FBFCFC" } },
+    { "path": "pages/mine/mine", "style": { "navigationStyle": "custom", "backgroundColor": "#FBFCFC" } },
+    { "path": "pages/sos/sos", "style": { "navigationStyle": "custom", "backgroundColor": "#FBFCFC" } },
+    { "path": "pages/evidence/list", "style": { "navigationStyle": "custom", "backgroundColor": "#FBFCFC" } },
+    { "path": "pages/evidence/upload", "style": { "navigationStyle": "custom", "backgroundColor": "#FBFCFC" } },
+    { "path": "pages/evidence/detail", "style": { "navigationStyle": "custom", "backgroundColor": "#FBFCFC" } },
+    { "path": "pages/chat/history", "style": { "navigationStyle": "custom", "backgroundColor": "#FBFCFC" } },
+    { "path": "pages/community/post", "style": { "navigationStyle": "custom", "backgroundColor": "#FBFCFC" } },
+    { "path": "pages/community/detail", "style": { "navigationStyle": "custom", "backgroundColor": "#FBFCFC" } },
+    { "path": "pages/settings/privacy", "style": { "navigationStyle": "custom", "backgroundColor": "#FBFCFC" } }
+    ,{ "path": "pages/risk/risk", "style": { "navigationStyle": "custom", "backgroundColor": "#FBFCFC" } }
+    ,{ "path": "pages/knowledge/knowledge", "style": { "navigationStyle": "custom", "backgroundColor": "#FBFCFC" } }
+  ],
+  "globalStyle": {
+    "navigationBarTitleText": "暖芽",
+    "navigationBarBackgroundColor": "#FBFCFC",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#FBFCFC"
+  }
+}
