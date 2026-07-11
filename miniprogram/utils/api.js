@@ -308,8 +308,9 @@ async function transcribe(filePath) {
           })
         })
         const r = await callCloud('asr', { fileID: up.fileID })
+        console.log('[asr诊断] 版本:', r && r.v, '| 返回:', r && r.text ? ('"' + r.text + '"') : '空', '| 各模型错误:', r && r.error)
         if (r && r.text) return { text: r.text, source: 'cloud' }
-        throw new Error('asr 云函数返回空')
+        throw new Error('asr返回空 · ' + (r && r.error ? r.error : '未知'))
       }
       // direct：wx.uploadFile 天然支持 multipart；主 gpt-4o-transcribe，败则 whisper-1
       const uploadOnce = (model) => new Promise((resolve, reject) => {
