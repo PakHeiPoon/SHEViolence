@@ -1,4 +1,4 @@
-# 港湾 · 反家暴援助小程序（黑客松 30h）
+# 暖芽 · 反家暴援助小程序（黑客松 30h）
 
 伪装成「简易记账」的反家暴援助工具：密码解锁 → AI 陪伴 + 危机检测 + 法律 RAG + 风险评估 + 证据整理。
 
@@ -26,7 +26,7 @@
 miniprogram/          小程序前端（微信原生）
   pages/disguise      伪装记账本 + 密码解锁（入口页）
   pages/home          真实首页：一键求助/功能入口/科普流
-  pages/chat          AI 对话：暖暖陪伴 + 法律RAG 双模式 + 危机检测
+  pages/chat          AI 对话：暖芽陪伴 + 法律RAG 双模式 + 危机检测
   pages/risk          安全自查（DA 量表 + deepseek-r1 分级）
   pages/evidence      证据时间线（qwen3-vl 伤情描述）
   pages/community     互助社群（静态演示数据）
