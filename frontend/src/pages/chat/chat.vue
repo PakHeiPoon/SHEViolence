@@ -526,13 +526,14 @@ export default {
   width: 320rpx;
   height: 270rpx;
   margin-bottom: 26rpx;
+  transform: translateY(12rpx);
 }
 
 .welcome-title {
   max-width: 650rpx;
   text-align: center;
   font-family: "Songti SC", "STSong", serif;
-  font-size: var(--font-intro);
+  font-size: calc(var(--font-intro) - 4rpx);
   font-weight: 700;
   line-height: 1.42;
 }

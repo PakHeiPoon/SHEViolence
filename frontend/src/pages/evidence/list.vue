@@ -256,8 +256,8 @@ export default {
 .top-controls { display: flex; justify-content: space-between; padding: calc(var(--status-bar-height) + 28rpx) 36rpx 0; }
 .soft-pill, .upload-pill { display: flex; height: 76rpx; align-items: center; gap: 14rpx; padding: 0 28rpx; box-sizing: border-box; border: 1rpx solid #FFFFFF; border-radius: 42rpx; background: #FDFDFD; box-shadow: 0 16rpx 46rpx rgba(31,28,37,.08); font-size: var(--font-body); font-weight: 700; }
 
-.date-head { display: flex; align-items: center; justify-content: space-between; padding: 56rpx 40rpx 30rpx; }
-.day-title { font-family: "Songti SC", "STSong", serif; font-size: var(--font-date); font-weight: 700; line-height: 1.05; }
+.date-head { display: flex; align-items: center; justify-content: space-between; padding: 58rpx 40rpx 30rpx; }
+.day-title { font-family: "Songti SC", "STSong", serif; font-size: var(--font-display); font-weight: 700; line-height: 1.05; }
 .month-trigger { display: flex; min-height: 56rpx; align-items: center; gap: 14rpx; padding: 0 8rpx 0 18rpx; border-radius: 30rpx; }
 .month-label { color: #33303a; font-size: var(--font-body); font-weight: 600; letter-spacing: 0; }
 .month-chevron { width: 14rpx; height: 14rpx; margin-top: -7rpx; border-right: 4rpx solid #33303a; border-bottom: 4rpx solid #33303a; transform: rotate(45deg); transition: transform .2s ease; }

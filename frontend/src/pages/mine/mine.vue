@@ -1,14 +1,9 @@
 <template>
   <view class="settings-page">
     <scroll-view class="page-scroll" scroll-y :show-scrollbar="false">
-      <view class="top-controls">
-        <view class="brand-pill">暖芽 <text>✦</text></view>
-      </view>
-
       <view class="profile-hero">
         <view class="hero-avatar-ring" @tap="reroll">
-          <view class="hero-avatar">{{ nick.slice(0, 1) }}</view>
-          <view class="hero-badge">匿名</view>
+          <image class="hero-avatar" src="/static/icons/profile-avatar.png" mode="aspectFill" />
         </view>
         <view class="hero-copy">
           <text class="hero-nick">{{ nick }}</text>
@@ -201,23 +196,19 @@ export default {
 <style scoped>
 .settings-page { height: 100vh; overflow: hidden; background: #FBFCFC; }
 .page-scroll { height: 100%; }
-.top-controls { display: flex; align-items: center; justify-content: space-between; padding: calc(var(--status-bar-height) + 28rpx) 36rpx 0; }
-.brand-pill { display: flex; height: 76rpx; align-items: center; justify-content: center; padding: 0 30rpx; box-sizing: border-box; border: 1rpx solid #FFFFFF; border-radius: 42rpx; background: #FDFDFD; box-shadow: 0 16rpx 46rpx rgba(31,28,37,.08); font-size: var(--font-body); font-weight: 700; }
-.brand-pill text { margin-left: 8rpx; color: #8d6cf1; }
-.profile-hero { display: flex; align-items: center; gap: 30rpx; padding: 46rpx 40rpx 18rpx; }
+.profile-hero { display: flex; align-items: center; gap: 30rpx; padding: calc(var(--status-bar-height) + 148rpx) 40rpx 18rpx; }
 .hero-avatar-ring { position: relative; display: flex; width: 216rpx; height: 216rpx; align-items: center; justify-content: center; border-radius: 50%; background: conic-gradient(#7c5cf0 0 68%, #ece9f2 68% 100%); }
-.hero-avatar { display: flex; width: 188rpx; height: 188rpx; align-items: center; justify-content: center; border: 8rpx solid #fdfdfd; border-radius: 50%; box-sizing: border-box; background: linear-gradient(145deg, #cabcf5, #9b7cff); color: #fff; font-size: 74rpx; font-weight: 700; }
-.hero-badge { position: absolute; bottom: -2rpx; left: 50%; padding: 7rpx 20rpx; border-radius: 26rpx; background: #7c5cf0; color: #fff; font-size: var(--font-caption); font-weight: 700; transform: translateX(-50%); }
+.hero-avatar { width: 188rpx; height: 188rpx; border: 8rpx solid #fdfdfd; border-radius: 50%; box-sizing: border-box; background: #cabcf5; }
 .hero-copy { display: flex; min-width: 0; flex: 1; flex-direction: column; align-items: flex-start; }
 .hero-nick { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--font-feature); font-weight: 700; }
-.hero-edit { display: flex; align-items: center; gap: 8rpx; margin-top: 16rpx; padding: 13rpx 26rpx; border-radius: 32rpx; background: #f1eff3; color: #444049; font-size: var(--font-meta); font-weight: 700; }
+.hero-edit { display: flex; align-items: center; gap: 8rpx; margin-top: 16rpx; padding: 13rpx 26rpx; border-radius: 32rpx; background: #f1eff3; color: #444049; font-size: calc(var(--font-meta) - 2rpx); font-weight: 700; }
 .hero-edit:active { transform: scale(0.96); }
-.hero-edit-icon { font-size: 22rpx; }
-.section-title-local { display: block; margin: 30rpx 40rpx 14rpx; font-size: var(--font-section); font-weight: 700; }
-.section-head { display: flex; align-items: center; justify-content: space-between; margin: 30rpx 40rpx 14rpx; font-size: var(--font-section); font-weight: 700; }
+.hero-edit-icon { font-size: 20rpx; }
+.section-title-local { display: block; margin: 44rpx 40rpx 14rpx; font-size: calc(var(--font-section) - 8rpx); font-weight: 700; }
+.section-head { display: flex; align-items: center; justify-content: space-between; margin: 44rpx 40rpx 14rpx; font-size: calc(var(--font-section) - 8rpx); font-weight: 700; }
 .section-head text:last-child { color: #96929b; font-size: var(--font-caption); font-weight: 400; }
-.menu-group { margin: 0 36rpx 30rpx; border-radius: 32rpx; overflow: hidden; background: #fff; box-shadow: 0 12rpx 40rpx rgba(31, 28, 37, 0.07); }
-.menu-row { display: flex; min-height: 108rpx; align-items: center; padding: 16rpx 26rpx; box-sizing: border-box; border-bottom: 1rpx solid #f2f0f3; }
+.menu-group { margin: 0 36rpx 44rpx; border-radius: 32rpx; overflow: hidden; background: #fff; box-shadow: 0 12rpx 40rpx rgba(31, 28, 37, 0.07); }
+.menu-row { display: flex; min-height: 88rpx; align-items: center; padding: 12rpx 26rpx; box-sizing: border-box; border-bottom: 1rpx solid #f2f0f3; }
 .menu-row:last-child { border-bottom: 0; }
 .row-icon { display: flex; width: 64rpx; height: 64rpx; flex: 0 0 64rpx; align-items: center; justify-content: center; margin-right: 18rpx; border-radius: 20rpx; font-size: 32rpx; }
 .tint-purple { background: #efe9ff; }
@@ -230,23 +221,23 @@ export default {
 .help-group .menu-row { border-bottom-color: #e9e7eb; }
 .help-group .row-label { font-family: "PingFang SC", "Heiti SC", "Microsoft YaHei", sans-serif; }
 .row-copy { min-width: 0; flex: 1; }
-.row-label { display: block; color: #19171c; font-size: var(--font-body); font-weight: 700; }
+.row-label { display: block; color: #19171c; font-size: var(--font-caption); font-weight: 700; }
 .row-action { color: #745fc1; font-size: var(--font-meta); font-weight: 700; }
 .row-arrow { color: rgba(25,23,28,.7); font-family: Georgia, serif; font-size: 42rpx; }
-.contact-section { margin: 0 36rpx 30rpx; border-radius: 32rpx; overflow: hidden; background: #fff; box-shadow: 0 12rpx 40rpx rgba(31, 28, 37, 0.07); }
-.contact-row { display: flex; min-height: 94rpx; align-items: center; gap: 14rpx; padding: 14rpx 26rpx; }
+.contact-section { margin: 0 36rpx 44rpx; border-radius: 32rpx; overflow: hidden; background: #fff; box-shadow: 0 12rpx 40rpx rgba(31, 28, 37, 0.07); }
+.contact-row { display: flex; min-height: 80rpx; align-items: center; gap: 14rpx; padding: 10rpx 26rpx; }
 .contact-row + .contact-row { border-top: 1rpx solid #f2f0f3; }
 .contact-avatar { display: flex; width: 50rpx; height: 50rpx; flex: 0 0 50rpx; align-items: center; justify-content: center; border-radius: 50%; background: #e2f4e8; color: #3f7d55; font-size: var(--font-caption); font-weight: 700; }
 .contact-copy { min-width: 0; flex: 1; }
 .contact-copy text { display: block; }
-.contact-copy text:first-child { font-size: var(--font-body); font-weight: 700; }
-.contact-copy text:last-child { margin-top: 4rpx; color: #96929b; font-size: var(--font-meta); }
-.contact-remove { color: #5B3AA4; font-size: var(--font-meta); font-weight: 700; }
-.contact-empty { padding: 24rpx 24rpx 12rpx; color: #96929b; text-align: center; font-size: var(--font-meta); }
+.contact-copy text:first-child { font-size: calc(var(--font-body) - 7rpx); font-weight: 700; }
+.contact-copy text:last-child { margin-top: 4rpx; color: #96929b; font-size: calc(var(--font-meta) - 7rpx); }
+.contact-remove { color: #5B3AA4; font-size: calc(var(--font-meta) - 7rpx); font-weight: 700; }
+.contact-empty { padding: 24rpx 24rpx 12rpx; color: #96929b; text-align: center; font-size: calc(var(--font-meta) - 7rpx); }
 .contact-form { display: grid; gap: 12rpx; padding: 18rpx 22rpx 22rpx; border-top: 1rpx solid #f2f0f3; }
-.contact-input { height: 72rpx; padding: 0 22rpx; box-sizing: border-box; border-radius: 38rpx; background: #f4f3f5; font-size: var(--font-body); }
-.contact-add { display: flex; height: 74rpx; align-items: center; justify-content: center; border-radius: 38rpx; background: #1d1a20; color: #fff; font-size: var(--font-body); font-weight: 700; }
-.contact-limit { padding: 20rpx 24rpx; border-top: 1rpx solid #f2f0f3; color: #96929b; text-align: center; font-size: var(--font-caption); }
+.contact-input { height: 72rpx; padding: 0 22rpx; box-sizing: border-box; border-radius: 38rpx; background: #f4f3f5; font-size: calc(var(--font-body) - 7rpx); }
+.contact-add { display: flex; height: 74rpx; align-items: center; justify-content: center; border-radius: 38rpx; background: #1d1a20; color: #fff; font-size: calc(var(--font-body) - 7rpx); font-weight: 700; }
+.contact-limit { padding: 20rpx 24rpx; border-top: 1rpx solid #f2f0f3; color: #96929b; text-align: center; font-size: calc(var(--font-caption) - 7rpx); }
 .app-footer { display: flex; margin: 58rpx 44rpx 0; flex-direction: column; align-items: center; text-align: center; }
 .footer-title { font-family: "Songti SC", "STSong", serif; font-size: var(--font-nav); font-weight: 700; }
 .footer-note { margin-top: 14rpx; color: #77727c; font-size: var(--font-meta); line-height: 1.5; }

@@ -287,7 +287,7 @@ export default {
   min-width: 0;
   height: 72rpx;
   flex: 1;
-  font-size: 24rpx;
+  font-size: 22rpx;
 }
 
 .prompt-placeholder {
@@ -305,7 +305,7 @@ export default {
   border-radius: 40rpx;
   background: #171519;
   color: #fff;
-  font-size: 24rpx;
+  font-size: 22rpx;
   font-weight: 700;
 }
 
@@ -447,7 +447,7 @@ export default {
 
 .history-title {
   font-family: "Avenir Next", "PingFang SC", sans-serif;
-  font-size: calc(var(--font-feature) - 2rpx);
+  font-size: calc(var(--font-section) - 8rpx);
   font-weight: 700;
   letter-spacing: 0;
 }
@@ -520,7 +520,7 @@ export default {
 .history-summary {
   overflow: hidden;
   color: rgba(23, 22, 25, 0.82);
-  font-size: calc(var(--font-body) - 2rpx);
+  font-size: var(--font-caption);
   line-height: 1.4;
   text-overflow: ellipsis;
   white-space: nowrap;
