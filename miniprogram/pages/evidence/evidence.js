@@ -82,7 +82,7 @@ Page({
     this.setData({ statementGen: true })
     try {
       const r = await api.statement(this.data.list)
-      this.setData({ statementGen: false, statement: r.text })
+      this.setData({ statementGen: false, statement: util.stripMd(r.text) })
     } catch (e) {
       this.setData({ statementGen: false })
       wx.showToast({ title: '生成失败，请重试', icon: 'none' })

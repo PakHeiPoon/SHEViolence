@@ -62,6 +62,7 @@ Page({
 
   // 打字机流式：逐字追加，完成后在回答下方展示来源引用
   streamReply(fullText, sources) {
+    fullText = util.stripMd(fullText)
     const idx = this.data.messages.length
     this.setData({
       messages: this.data.messages.concat([{ role: 'assistant', content: '', sources: null }]),

@@ -34,4 +34,16 @@ function fmtAmount(n) {
   return v.toFixed(2)
 }
 
-module.exports = { genNickname, ensureUnlocked, todayStr, fmtAmount }
+// 清理 AI 输出中的 markdown 痕迹（小程序 text 不渲染 markdown）+ 兜底剔除卡片标记
+function stripMd(s) {
+  return String(s || '')
+    .replace(/\[\[CARD[:：][\s\S]*?\]\]/g, '')
+    .replace(/\*\*(.+?)\*\*/g, '$1')
+    .replace(/__(.+?)__/g, '$1')
+    .replace(/^#{1,4}\s*/gm, '')
+    .replace(/^\s*[-*]\s+/gm, '· ')
+    .replace(/`([^`]+)`/g, '$1')
+    .trim()
+}
+
+module.exports = { genNickname, ensureUnlocked, todayStr, fmtAmount, stripMd }

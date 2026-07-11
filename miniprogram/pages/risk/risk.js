@@ -34,6 +34,8 @@ Page({
     })
 
     const result = await api.risk(answerList)
+    result.aiAnalysis = util.stripMd(result.aiAnalysis)
+    result.suggestions = (result.suggestions || []).map(s => util.stripMd(s))
     this.setData({ result, submitting: false })
     wx.pageScrollTo({ scrollTop: 0, duration: 200 })
   },
