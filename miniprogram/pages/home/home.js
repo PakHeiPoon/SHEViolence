@@ -52,6 +52,7 @@ Page({
   goLegal() { wx.navigateTo({ url: '/pages/chat/chat?mode=legal' }) },
   goRisk() { wx.navigateTo({ url: '/pages/risk/risk' }) },
   goEvidence() { wx.navigateTo({ url: '/pages/evidence/evidence' }) },
+  goOrgs() { wx.navigateTo({ url: '/pages/orgs/orgs' }) },
   goCommunity() { wx.redirectTo({ url: '/pages/community/community' }) },
 
   toggleCard(e) {

@@ -41,6 +41,16 @@
     </view>
   </view>
 
+  <!-- 求助资源名录入口 -->
+  <view class="res-entry card fade-up delay-2" hover-class="cell-hover" bindtap="goOrgs">
+    <view class="res-icon">📒</view>
+    <view class="res-texts">
+      <view class="res-name">求助资源名录</view>
+      <view class="res-desc">32 家真人救助机构 · 国家热线 · 保护令/起诉书模板</view>
+    </view>
+    <view class="res-arrow">›</view>
+  </view>
+
   <!-- 科普信息流 -->
   <view class="section-title fade-up delay-3">了解，是保护自己的第一步</view>
   <view class="feed">

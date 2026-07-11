@@ -89,3 +89,11 @@
 .k-body { margin-top: 20rpx; border-top: 1rpx dashed var(--border); padding-top: 20rpx; }
 .k-p { font-size: 26rpx; color: var(--text); margin-bottom: 14rpx; line-height: 1.75; }
 .k-p:last-child { margin-bottom: 0; }
+
+/* 求助资源名录入口（通栏） */
+.res-entry { display: flex; align-items: center; gap: 18rpx; margin-top: 24rpx; padding: 26rpx 28rpx; }
+.res-icon { width: 76rpx; height: 76rpx; flex: 0 0 76rpx; display: flex; align-items: center; justify-content: center; border-radius: 24rpx; background: #eeebff; font-size: 38rpx; }
+.res-texts { flex: 1; min-width: 0; }
+.res-name { font-size: 30rpx; font-weight: 700; }
+.res-desc { font-size: 22rpx; color: var(--muted); margin-top: 4rpx; }
+.res-arrow { font-size: 36rpx; color: var(--muted); opacity: 0.6; }
