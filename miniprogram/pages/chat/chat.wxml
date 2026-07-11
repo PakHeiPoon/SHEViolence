@@ -1,4 +1,11 @@
-<view class="chat">
+<view class="chatbox">
+
+  <!-- 顶部会话栏 -->
+  <view class="topbar">
+    <view class="tb-btn" bindtap="openSessions">☰ 会话</view>
+    <view class="tb-title">暖暖</view>
+    <view class="tb-btn tb-new" bindtap="newSession">＋ 新对话</view>
+  </view>
 
   <!-- 危机求助 Banner -->
   <view class="crisis {{crisisLevel >= 3 ? 'lv3' : 'lv2'}}" wx:if="{{crisisLevel >= 2}}">
@@ -12,34 +19,24 @@
     </view>
   </view>
 
-  <!-- 模式切换 -->
-  <view class="seg">
-    <view class="seg-item {{mode === 'companion' ? 'on' : ''}}" bindtap="switchMode" data-mode="companion">💛 暖暖陪伴</view>
-    <view class="seg-item {{mode === 'legal' ? 'on' : ''}}" bindtap="switchMode" data-mode="legal">⚖️ 法律问答</view>
-  </view>
-  <view class="notice">🔒 对话不会自动保存 · AI 建议仅供参考</view>
+  <view class="notice">🔒 对话仅保存在本机 · 可发文字或图片 · AI 建议仅供参考</view>
 
   <!-- 消息区 -->
   <scroll-view class="msgs" scroll-y scroll-into-view="{{toView}}" scroll-with-animation>
     <view class="welcome" wx:if="{{messages.length === 0}}">
-      <view class="w-emoji">{{mode === 'companion' ? '🌿' : '⚖️'}}</view>
-      <view class="w-title">{{mode === 'companion' ? '你好，我是暖暖' : '法律问题，依据法条回答'}}</view>
-      <view class="w-sub">{{mode === 'companion' ? '这里很安全，你可以慢慢说，我会一直在。' : '回答会标注来源出处，检索自反家暴法律知识库。'}}</view>
+      <view class="w-emoji">🌿</view>
+      <view class="w-title">你好，我是暖暖</view>
+      <view class="w-sub">这里很安全，你可以慢慢说，我会一直在。</view>
       <view class="chips">
         <view class="chip" wx:for="{{chips}}" wx:key="*this" bindtap="tapChip" data-text="{{item}}">{{item}}</view>
       </view>
     </view>
 
     <block wx:for="{{messages}}" wx:key="index">
-      <view id="msg-{{index}}" class="row {{item.role === 'user' ? 'right' : 'left'}}">
+      <view class="row {{item.role === 'user' ? 'right' : 'left'}}">
         <view class="bubble {{item.role === 'user' ? 'user' : 'ai'}}">
-          <text>{{item.content}}</text>
-          <view class="sources" wx:if="{{item.sources && item.sources.length}}">
-            <view class="src" wx:for="{{item.sources}}" wx:for-item="s" wx:key="ref">
-              <text class="src-ref">[{{s.ref}}]</text>
-              <text class="src-name">{{s.source}}</text>
-            </view>
-          </view>
+          <image wx:if="{{item.image}}" class="bubble-img" src="{{item.image}}" mode="widthFix" />
+          <text wx:if="{{item.content}}">{{item.content}}</text>
         </view>
       </view>
       <view class="card-row" wx:if="{{item.card}}">
@@ -57,16 +54,45 @@
     <view class="row left" wx:if="{{aiTyping}}">
       <view class="bubble ai typing">
         <view class="dot d1"></view><view class="dot d2"></view><view class="dot d3"></view>
+        <text class="status-text" wx:if="{{agentStatus}}">{{agentStatus}}</text>
       </view>
     </view>
     <view id="anchor-bottom" style="height: 2rpx;"></view>
   </scroll-view>
 
+  <!-- 待发图片预览 -->
+  <view class="img-preview" wx:if="{{imagePath}}">
+    <image class="ip-thumb" src="{{imagePath}}" mode="aspectFill" />
+    <view class="ip-del" catchtap="clearImage">✕</view>
+    <view class="ip-tip">图片将发给暖暖看看</view>
+  </view>
+
   <!-- 输入条 -->
   <view class="input-bar">
+    <view class="icon-btn" hover-class="icon-btn on" bindtap="chooseImage">📷</view>
     <input class="input" value="{{inputValue}}" bindinput="onInput" confirm-type="send" bindconfirm="send"
-      placeholder="{{mode === 'companion' ? '想说什么都可以…' : '输入你的法律问题…'}}" placeholder-class="ph" />
+      placeholder="想说什么都可以…" placeholder-class="ph" />
     <view class="send {{aiTyping ? 'disabled' : ''}}" bindtap="send">发送</view>
+  </view>
+
+  <!-- 会话抽屉 -->
+  <view class="drawer-mask" wx:if="{{showSessions}}" bindtap="closeSessions"></view>
+  <view class="drawer {{showSessions ? 'open' : ''}}">
+    <view class="drawer-head">
+      <text>我的会话</text>
+      <view class="drawer-new" bindtap="newSession">＋ 新对话</view>
+    </view>
+    <scroll-view class="drawer-list" scroll-y>
+      <view class="sess-item {{item.active ? 'active' : ''}}" wx:for="{{sessions}}" wx:key="id"
+        bindtap="switchSession" data-id="{{item.id}}">
+        <view class="sess-info">
+          <view class="sess-title">{{item.title}}</view>
+          <view class="sess-time">{{item.time}}</view>
+        </view>
+        <view class="sess-del" catchtap="delSession" data-id="{{item.id}}">删除</view>
+      </view>
+      <view class="drawer-empty" wx:if="{{sessions.length === 0}}">还没有会话</view>
+    </scroll-view>
   </view>
 
   <escape-btn />

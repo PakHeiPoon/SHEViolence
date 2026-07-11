@@ -7,7 +7,8 @@
     "pages/community/community",
     "pages/mine/mine",
     "pages/risk/risk",
-    "pages/evidence/evidence"
+    "pages/evidence/evidence",
+    "pages/legal/legal"
   ],
   "tabBar": {
     "color": "#A79A80",

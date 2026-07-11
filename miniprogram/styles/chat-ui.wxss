@@ -1,0 +1,49 @@
+/* 共享聊天 UI（暖暖倾诉 / 法律问答 通用） */
+.chatbox { display: flex; flex-direction: column; height: 100vh; }
+
+.msgs { flex: 1; min-height: 0; padding: 12rpx 28rpx; box-sizing: border-box; }
+.welcome { text-align: center; padding: 56rpx 30rpx 30rpx; }
+.w-emoji { font-size: 72rpx; }
+.w-title { font-size: 36rpx; font-weight: 800; margin-top: 16rpx; }
+.w-sub { font-size: 26rpx; color: var(--muted); margin-top: 10rpx; }
+.chips { display: flex; flex-direction: column; gap: 16rpx; margin-top: 40rpx; }
+.chip { background: var(--surface); border: 2rpx solid var(--border); border-radius: 999rpx; padding: 18rpx 30rpx; font-size: 27rpx; color: var(--text); box-shadow: var(--shadow); }
+
+.row { display: flex; margin: 18rpx 0; }
+.row.right { justify-content: flex-end; }
+.row.left { justify-content: flex-start; }
+.bubble { max-width: 78%; padding: 20rpx 26rpx; font-size: 29rpx; line-height: 1.7; word-break: break-all; }
+.bubble.user { background: linear-gradient(135deg, #F3C9A2, #EBB183); color: #4A3319; border-radius: 28rpx 28rpx 8rpx 28rpx; }
+.bubble.ai { background: var(--surface); border: 1rpx solid var(--border); border-radius: 28rpx 28rpx 28rpx 8rpx; box-shadow: var(--shadow); }
+.bubble-img { width: 320rpx; max-width: 58vw; border-radius: 18rpx; display: block; margin-bottom: 8rpx; }
+
+.sources { margin-top: 16rpx; border-top: 1rpx dashed var(--border); padding-top: 12rpx; }
+.src { font-size: 22rpx; color: var(--muted); margin-top: 6rpx; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.src-ref { color: var(--sage); font-weight: 700; margin-right: 8rpx; }
+
+.typing { display: flex; gap: 10rpx; align-items: center; padding: 26rpx 30rpx; }
+.dot { width: 12rpx; height: 12rpx; border-radius: 50%; background: var(--apricot); animation: blink 1.2s infinite; }
+.d2 { animation-delay: 0.2s; }
+.d3 { animation-delay: 0.4s; }
+@keyframes blink { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
+.status-text { font-size: 24rpx; color: var(--muted); margin-left: 4rpx; }
+
+.input-bar { display: flex; align-items: center; gap: 14rpx; padding: 16rpx 22rpx calc(16rpx + env(safe-area-inset-bottom)); background: var(--surface); border-top: 1rpx solid var(--border); }
+.input { flex: 1; background: var(--surface-2); border-radius: 999rpx; padding: 18rpx 28rpx; font-size: 29rpx; }
+.ph { color: var(--muted); }
+.icon-btn { width: 74rpx; height: 74rpx; flex-shrink: 0; border-radius: 50%; background: var(--surface-2); display: flex; align-items: center; justify-content: center; font-size: 38rpx; }
+.icon-btn.on { transform: scale(0.92); }
+.send { background: linear-gradient(135deg, var(--apricot), var(--apricot-deep)); color: #FFFDF7; font-size: 28rpx; font-weight: 700; padding: 16rpx 32rpx; border-radius: 999rpx; flex-shrink: 0; }
+.send.disabled { opacity: 0.5; }
+
+/* 危机 Banner（暖暖页用） */
+.crisis { padding: 22rpx 28rpx; animation: slideDown 0.3s ease; }
+@keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+.crisis.lv2 { background: #F9EAD9; border-bottom: 2rpx solid #E8B27E; }
+.crisis.lv3 { background: var(--danger-soft); border-bottom: 2rpx solid #E0917E; }
+.crisis-text { font-size: 26rpx; font-weight: 600; color: var(--danger); }
+.crisis-actions { display: flex; align-items: center; gap: 16rpx; margin-top: 14rpx; }
+.crisis-btn { font-size: 26rpx; font-weight: 700; padding: 10rpx 26rpx; border-radius: 999rpx; color: #FFF6F2; }
+.b110 { background: var(--danger); }
+.b12338 { background: var(--apricot-deep); }
+.crisis-close { margin-left: auto; color: var(--muted); font-size: 30rpx; padding: 4rpx 12rpx; }

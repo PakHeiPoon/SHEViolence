@@ -84,32 +84,62 @@ function detectCrisis(text) {
   return { level, hits }
 }
 
-// ---------- 情感陪伴对话 ----------
+// ---------- 情感陪伴对话（支持多模态发图） ----------
+// direct 模式：把带图的 user 消息转成 claude 多模态 content
+async function buildDirectMessages(messages) {
+  const out = [{ role: 'system', content: prompts.CHAT_SYSTEM }]
+  for (const x of messages.slice(-12)) {
+    if (x.image && x.role === 'user') {
+      const b64 = await readFileBase64(x.image)
+      out.push({
+        role: 'user',
+        content: [
+          { type: 'text', text: x.content || '你能看看这张照片吗？' },
+          { type: 'image_url', image_url: { url: 'data:image/jpeg;base64,' + b64 } }
+        ]
+      })
+    } else {
+      out.push({ role: x.role, content: x.content })
+    }
+  }
+  return out
+}
+
+// cloud 模式：图片先传云存储拿 fileID，交给云函数下载分析
+function uploadImage(filePath) {
+  return new Promise((resolve, reject) => {
+    wx.cloud.uploadFile({
+      cloudPath: 'chatimg/' + Date.now() + '_' + Math.floor(Math.random() * 1e6) + '.jpg',
+      filePath, success: resolve, fail: reject
+    })
+  })
+}
+
 async function chat(messages) {
   const m = mode()
+  const last = messages[messages.length - 1] || {}
+  const hasImage = !!last.image
   if (m !== 'mock') {
     try {
       if (m === 'cloud') {
-        const r = await callCloud('chat', { messages: messages.slice(-12) })
+        let imageFileID = ''
+        if (hasImage) imageFileID = (await uploadImage(last.image)).fileID
+        const msgs = messages.slice(-12).map(x => ({ role: x.role, content: x.content }))
+        const r = await callCloud('chat', { messages: msgs, imageFileID })
         return { reply: r.reply, source: 'cloud' }
       }
       const data = await rq('/chat/completions', {
-        model: config.models.chat,
-        temperature: 0.7,
-        max_tokens: 600,
-        messages: [{ role: 'system', content: prompts.CHAT_SYSTEM }].concat(
-          messages.slice(-12).map(x => ({ role: x.role, content: x.content }))
-        )
+        model: config.models.chat, temperature: 0.7, max_tokens: 600,
+        messages: await buildDirectMessages(messages)
       })
       return { reply: stripThink(data.choices[0].message.content), source: 'direct' }
     } catch (e) {
       console.warn('[api.chat] 降级 mock:', e)
     }
   }
-  await sleep(800)
-  const last = messages.length ? messages[messages.length - 1].content : ''
-  const isCrisis = detectCrisis(last).level >= 2
-  return { reply: mockData.pickChatReply(messages.length, isCrisis), source: 'mock' }
+  await sleep(hasImage ? 1200 : 800)
+  const isCrisis = detectCrisis(last.content || '').level >= 2
+  return { reply: hasImage ? mockData.visionChatReply : mockData.pickChatReply(messages.length, isCrisis), source: 'mock' }
 }
 
 // ---------- 法律问答（真 RAG：检索 + 生成 + 来源引用） ----------

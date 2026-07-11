@@ -7,6 +7,8 @@ const chatReplies = [
 
 const crisisReply = '我很担心你现在的安全。如果你正处于危险中，请立即拨打 110，或联系 12338 妇女维权热线。如果暂时安全，请尽量待在有人、离出口近的房间，避开厨房和浴室。你不是一个人，我们一起想办法。'
 
+const visionChatReply = '我看到你发来的照片了，谢谢你愿意信任我。如果照片里是身上的伤，请一定尽快就医并保留病历；用手机原图保存这些照片，它们是重要的证据。如果现在有危险，随时可以拨打 110。你愿意和我说说当时发生了什么吗？'
+
 function pickChatReply(msgCount, isCrisis) {
   if (isCrisis) return crisisReply
   return chatReplies[Math.floor(msgCount / 2) % chatReplies.length]
@@ -50,4 +52,4 @@ const evidencePreset = [
   }
 ]
 
-module.exports = { chatReplies, crisisReply, pickChatReply, legalMock, riskAnalysisMock, visionMock, evidencePreset }
+module.exports = { chatReplies, crisisReply, visionChatReply, pickChatReply, legalMock, riskAnalysisMock, visionMock, evidencePreset }

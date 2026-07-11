@@ -64,6 +64,7 @@ Page({
   },
 
   goChat() { wx.switchTab({ url: '/pages/chat/chat' }) },
+  goLegal() { wx.navigateTo({ url: '/pages/legal/legal' }) },
   goRisk() { wx.navigateTo({ url: '/pages/risk/risk' }) },
   goEvidence() { wx.navigateTo({ url: '/pages/evidence/evidence' }) },
   goCommunity() { wx.switchTab({ url: '/pages/community/community' }) },

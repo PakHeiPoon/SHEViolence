@@ -21,8 +21,13 @@
   <view class="grid fade-up delay-2">
     <view class="cell" hover-class="cell-hover" bindtap="goChat">
       <view class="cell-icon bg-apricot">💬</view>
-      <view class="cell-name">AI 倾诉</view>
-      <view class="cell-desc">暖暖在，随时听</view>
+      <view class="cell-name">暖暖倾诉</view>
+      <view class="cell-desc">陪伴你，随时听</view>
+    </view>
+    <view class="cell" hover-class="cell-hover" bindtap="goLegal">
+      <view class="cell-icon bg-sage">⚖️</view>
+      <view class="cell-name">法律问答</view>
+      <view class="cell-desc">依据法条与案例</view>
     </view>
     <view class="cell" hover-class="cell-hover" bindtap="goRisk">
       <view class="cell-icon bg-sage">📋</view>
@@ -33,11 +38,6 @@
       <view class="cell-icon bg-apricot">📁</view>
       <view class="cell-name">我的记录</view>
       <view class="cell-desc">证据整理与保管</view>
-    </view>
-    <view class="cell" hover-class="cell-hover" bindtap="goCommunity">
-      <view class="cell-icon bg-sage">👥</view>
-      <view class="cell-name">互助社群</view>
-      <view class="cell-desc">你不是一个人</view>
     </view>
   </view>
 

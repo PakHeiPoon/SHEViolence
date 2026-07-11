@@ -1,0 +1,43 @@
+<view class="chatbox">
+  <view class="notice">⚖️ 依据《反家暴法》、司法解释与权威案例作答 · 回答标注来源 · 仅供参考</view>
+
+  <scroll-view class="msgs" scroll-y scroll-into-view="{{toView}}" scroll-with-animation>
+    <view class="welcome" wx:if="{{messages.length === 0}}">
+      <view class="w-emoji">⚖️</view>
+      <view class="w-title">法律问答</view>
+      <view class="w-sub">检索自 569 篇反家暴法律法规与典型案例</view>
+      <view class="chips">
+        <view class="chip" wx:for="{{chips}}" wx:key="*this" bindtap="tapChip" data-text="{{item}}">{{item}}</view>
+      </view>
+    </view>
+
+    <block wx:for="{{messages}}" wx:key="index">
+      <view class="row {{item.role === 'user' ? 'right' : 'left'}}">
+        <view class="bubble {{item.role === 'user' ? 'user' : 'ai'}}">
+          <text>{{item.content}}</text>
+          <view class="sources" wx:if="{{item.sources && item.sources.length}}">
+            <view class="src" wx:for="{{item.sources}}" wx:for-item="s" wx:key="ref">
+              <text class="src-ref">[{{s.ref}}]</text><text class="src-name">{{s.source}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <view class="row left" wx:if="{{aiTyping}}">
+      <view class="bubble ai typing">
+        <view class="dot d1"></view><view class="dot d2"></view><view class="dot d3"></view>
+        <text class="status-text" wx:if="{{agentStatus}}">{{agentStatus}}</text>
+      </view>
+    </view>
+    <view id="anchor-bottom" style="height: 2rpx;"></view>
+  </scroll-view>
+
+  <view class="input-bar">
+    <input class="input" value="{{inputValue}}" bindinput="onInput" confirm-type="send" bindconfirm="send"
+      placeholder="输入你的法律问题…" placeholder-class="ph" />
+    <view class="send {{aiTyping ? 'disabled' : ''}}" bindtap="send">发送</view>
+  </view>
+
+  <escape-btn />
+</view>
