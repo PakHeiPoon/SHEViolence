@@ -101,10 +101,15 @@
   <view class="composer-wrap">
     <view class="composer">
       <view class="composer-tool" wx:if="{{mode === 'companion'}}" hover-class="press" bindtap="chooseImage">＋</view>
-      <view class="mic-button {{recing ? 'recing' : ''}}" bindtouchstart="voiceStart" bindtouchend="voiceStop" bindtouchcancel="voiceStop">🎤</view>
       <input class="composer-input" value="{{inputValue}}" bindinput="onInput" confirm-type="send" bindconfirm="send"
-        placeholder="{{mode === 'legal' ? '输入你的法律问题…' : '想说什么都可以…'}}" placeholder-class="ph" />
-      <view class="send-button {{aiTyping ? 'disabled' : ''}}" bindtap="send">发送</view>
+        placeholder="{{mode === 'legal' ? '输入你的法律问题…' : '告诉暖芽，你现在需要什么'}}" placeholder-class="ph" />
+      <!-- 空输入：按住说话（真 whisper）；有文字：发送 -->
+      <view class="speak-btn {{recing ? 'recing' : ''}}" wx:if="{{!inputValue}}"
+        bindtouchstart="voiceStart" bindtouchend="voiceStop" bindtouchcancel="voiceStop">
+        <view class="wave"><view></view><view></view><view></view><view></view><view></view></view>
+        <text>{{recing ? '松开结束' : '说话'}}</text>
+      </view>
+      <view class="send-button {{aiTyping ? 'disabled' : ''}}" wx:else bindtap="send">发送</view>
     </view>
   </view>
 
