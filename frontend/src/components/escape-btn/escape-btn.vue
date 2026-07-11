@@ -22,7 +22,7 @@ export default {
   position: fixed;
   z-index: 200;
   right: 34rpx;
-  bottom: calc(env(safe-area-inset-bottom) + 280rpx);
+  bottom: calc(env(safe-area-inset-bottom) + 340rpx);
   display: flex;
   width: 100rpx;
   height: 100rpx;
@@ -30,11 +30,11 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: 2rpx solid rgba(125, 71, 207, 0.2);
+  border: 2rpx solid rgba(255, 255, 255, 0.86);
   border-radius: 50%;
-  background: rgba(246, 240, 255, 0.94);
-  box-shadow: 0 16rpx 46rpx rgba(84, 45, 150, 0.16);
-  color: #7d47cf;
+  background: #5B3AA4;
+  box-shadow: 0 18rpx 48rpx rgba(91, 58, 164, 0.34);
+  color: #fff;
   text-align: center;
   transition: transform 0.16s ease-out, box-shadow 0.16s ease-out;
   backdrop-filter: blur(20rpx);
@@ -56,7 +56,7 @@ export default {
 
 .esc-pressed,
 .esc:active {
-  box-shadow: 0 10rpx 30rpx rgba(84, 45, 150, 0.13);
+  box-shadow: 0 10rpx 30rpx rgba(91, 58, 164, 0.24);
   transform: scale(0.91);
 }
 </style>

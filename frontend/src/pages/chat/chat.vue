@@ -6,7 +6,6 @@
       <view class="welcome-hero">
         <image class="welcome-mascot" src="/static/icons/mascot.png" mode="aspectFit" />
         <text class="welcome-title">把想说的都告诉我。\n我会陪你整理清楚。</text>
-        <text class="welcome-note">这里是安全的，你可以慢慢开始</text>
       </view>
 
       <view class="welcome-composer">
@@ -28,7 +27,6 @@
     <view v-else class="conversation-view">
       <scroll-view class="msgs" scroll-y :scroll-into-view="scrollTo" scroll-with-animation>
         <view v-for="m in msgs" :key="m.id" :id="'m' + m.id" class="msg-row" :class="m.role">
-          <image v-if="m.role === 'agent'" class="mini-avatar" src="/static/icons/avatar.png" mode="aspectFill" />
           <view class="bubble" :class="m.role">
             <text v-if="m.type === 'text'">{{ m.content }}</text>
             <image v-else-if="m.type === 'image'" :src="m.content" mode="widthFix" class="msg-img" />
@@ -63,7 +61,6 @@
           </view>
         </view>
         <view v-if="typing" class="msg-row agent typing-row">
-          <image class="mini-avatar" src="/static/icons/avatar.png" mode="aspectFill" />
           <view class="typing-bubble"><text></text><text></text><text></text></view>
         </view>
         <view class="message-tail"></view>
@@ -99,24 +96,40 @@
 
     <view class="drawer-mask" :class="{ show: drawerOpen }" @tap="drawerOpen = false"></view>
     <view class="drawer" :class="{ open: drawerOpen }">
+      <view class="drawer-topbar">
+        <view class="drawer-menu-button" aria-label="关闭聊天历史" @tap="drawerOpen = false">
+          <view class="drawer-menu-line"></view>
+          <view class="drawer-menu-line short"></view>
+        </view>
+
+        <view class="drawer-brand-pill">
+          <text>暖芽</text>
+          <text class="sparkle">✦</text>
+        </view>
+      </view>
+
       <view class="drawer-head">
-        <text class="drawer-title">聊天记录</text>
-        <view class="drawer-new" aria-label="新对话" @tap="newChatFromDrawer">✎</view>
+        <text class="drawer-title">聊天历史</text>
+        <view class="drawer-new" aria-label="新对话" @tap="newChatFromDrawer">
+          <view class="drawer-new-box"></view>
+          <view class="drawer-new-pen"></view>
+        </view>
       </view>
       <scroll-view class="drawer-scroll" scroll-y :show-scrollbar="false">
-        <view class="drawer-empty" v-if="!sessions.length">暂无历史会话</view>
+        <view class="drawer-empty" v-if="!sessions.length">
+          <text>还没有历史对话</text>
+          <text class="drawer-empty-note">开始聊天后，会话会安全保存在这里</text>
+        </view>
         <view
           v-for="s in sessions"
           :key="s.id"
           class="drawer-session"
-          :class="{ current: s.id === sessionId }"
           @tap="pickSession(s)"
         >
           <view class="drawer-session-copy">
-            <text class="drawer-session-time">{{ fmt(s.time) }} · {{ s.msgs.length }} 条</text>
             <text class="drawer-session-summary">{{ s.summary }}</text>
+            <text class="drawer-session-time">{{ fmt(s.time) }} · {{ s.msgs.length }} 条消息</text>
           </view>
-          <view class="drawer-session-del" @tap.stop="delSession(s)">×</view>
         </view>
         <view class="drawer-tail"></view>
       </scroll-view>
@@ -524,12 +537,6 @@ export default {
   line-height: 1.42;
 }
 
-.welcome-note {
-  margin-top: 16rpx;
-  color: #aaa6ae;
-  font-size: var(--font-meta);
-}
-
 .welcome-composer {
   position: absolute;
   right: 28rpx;
@@ -614,30 +621,22 @@ export default {
   justify-content: flex-end;
 }
 
-.mini-avatar {
-  width: 58rpx;
-  height: 58rpx;
-  flex: 0 0 58rpx;
-  border-radius: 50%;
-}
-
 .bubble {
   max-width: 74%;
   padding: 22rpx 24rpx;
-  border: 1rpx solid #efedf1;
+  border: 1rpx solid #e7ddff;
   border-radius: 26rpx 26rpx 26rpx 8rpx;
-  background: #fff;
+  background: #f3efff;
   box-shadow: 0 10rpx 34rpx rgba(35, 31, 45, 0.055);
   font-size: var(--font-body);
-  line-height: 1.65;
+  line-height: 1.5;
 }
 
 .bubble.user {
-  border: 0;
+  border: 1rpx solid #efedf1;
   border-radius: 26rpx 26rpx 8rpx 26rpx;
-  background: #1d1a20;
-  box-shadow: none;
-  color: #fff;
+  background: #fff;
+  color: #19171c;
 }
 
 .msg-img {
@@ -812,9 +811,9 @@ export default {
   align-items: center;
   gap: 8rpx;
   padding: 22rpx 26rpx;
-  border: 1rpx solid #efedf1;
+  border: 1rpx solid #e7ddff;
   border-radius: 26rpx 26rpx 26rpx 8rpx;
-  background: #fff;
+  background: #f3efff;
 }
 
 .typing-bubble text {
@@ -976,13 +975,11 @@ export default {
   bottom: 0;
   left: 0;
   display: flex;
-  width: 85%;
+  width: 82%;
   flex-direction: column;
-  padding: calc(var(--status-bar-height) + 40rpx) 34rpx 0;
   box-sizing: border-box;
-  border-radius: 0 40rpx 40rpx 0;
-  background: #f7f6f8;
-  box-shadow: 30rpx 0 90rpx rgba(22, 21, 24, 0.18);
+  background: #FBFCFC;
+  box-shadow: 24rpx 0 60rpx rgba(20, 18, 24, 0.12);
   transform: translateX(-105%);
   transition: transform 0.32s cubic-bezier(0.32, 0.72, 0, 1);
 }
@@ -991,64 +988,149 @@ export default {
   transform: translateX(0);
 }
 
+.drawer-topbar {
+  position: relative;
+  display: flex;
+  min-height: calc(var(--status-bar-height) + 116rpx);
+  flex: 0 0 auto;
+  align-items: flex-end;
+  padding: 0 36rpx;
+  box-sizing: border-box;
+}
+
+.drawer-menu-button {
+  display: flex;
+  width: 88rpx;
+  height: 88rpx;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10rpx;
+  box-sizing: border-box;
+  border: 1rpx solid #FFFFFF;
+  border-radius: 50%;
+  background: #FDFDFD;
+  box-shadow: 0 18rpx 50rpx rgba(32, 29, 39, 0.08);
+}
+
+.drawer-menu-line {
+  width: 30rpx;
+  height: 4rpx;
+  border-radius: 4rpx;
+  background: #171619;
+}
+
+.drawer-menu-line.short {
+  width: 20rpx;
+  margin-right: 10rpx;
+}
+
+.drawer-brand-pill {
+  position: absolute;
+  right: 26rpx;
+  bottom: 5rpx;
+  display: flex;
+  min-width: 196rpx;
+  height: 78rpx;
+  align-items: center;
+  justify-content: center;
+  gap: 10rpx;
+  padding: 0 32rpx;
+  box-sizing: border-box;
+  border: 1rpx solid #FFFFFF;
+  border-radius: 44rpx;
+  background: #FDFDFD;
+  box-shadow: 0 18rpx 50rpx rgba(32, 29, 39, 0.07);
+  font-size: var(--font-body);
+  font-weight: 700;
+}
+
+.sparkle {
+  color: #9b7cff;
+}
+
 .drawer-head {
   display: flex;
   flex: 0 0 auto;
   align-items: center;
   justify-content: space-between;
-  padding: 20rpx 4rpx 30rpx;
+  padding: 112rpx 38rpx 34rpx;
 }
 
 .drawer-title {
-  font-family: "PingFang SC", "Heiti SC", "Microsoft YaHei", sans-serif;
-  font-size: var(--font-intro);
+  font-family: "Avenir Next", "PingFang SC", sans-serif;
+  font-size: calc(var(--font-feature) - 2rpx);
   font-weight: 700;
+  letter-spacing: 0;
 }
 
 .drawer-new {
+  position: relative;
   display: flex;
-  width: 80rpx;
-  height: 80rpx;
+  width: 76rpx;
+  height: 76rpx;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
   background: #fff;
-  box-shadow: 0 14rpx 40rpx rgba(32, 29, 39, 0.09);
-  font-size: 32rpx;
+  box-shadow: 0 16rpx 44rpx rgba(32, 29, 39, 0.08);
 }
 
 .drawer-new:active {
   transform: scale(0.94);
 }
 
+.drawer-new-box {
+  width: 29rpx;
+  height: 29rpx;
+  border: 4rpx solid rgba(23, 22, 25, 0.78);
+  border-radius: 3rpx;
+}
+
+.drawer-new-pen {
+  position: absolute;
+  top: 22rpx;
+  right: 19rpx;
+  width: 25rpx;
+  height: 4rpx;
+  border: 5rpx solid #fff;
+  background: rgba(23, 22, 25, 0.78);
+  transform: rotate(-45deg);
+}
+
 .drawer-scroll {
   min-height: 0;
   flex: 1;
+  padding: 0 30rpx 210rpx;
+  box-sizing: border-box;
 }
 
 .drawer-empty {
-  padding: 100rpx 0;
-  text-align: center;
-  color: #96929b;
-  font-size: var(--font-meta);
+  display: flex;
+  padding: 110rpx 20rpx 0;
+  flex-direction: column;
+  align-items: center;
+  color: rgba(23, 22, 25, 0.48);
+  font-size: calc(var(--font-body) - 2rpx);
+}
+
+.drawer-empty-note {
+  margin-top: 12rpx;
+  color: rgba(23, 22, 25, 0.3);
+  font-size: calc(var(--font-meta) - 2rpx);
 }
 
 .drawer-session {
   display: flex;
   align-items: center;
-  gap: 12rpx;
-  margin-bottom: 18rpx;
-  padding: 24rpx 26rpx;
-  border-radius: 24rpx;
-  background: #efedf0;
-}
-
-.drawer-session.current {
-  background: #e9e4f5;
+  margin-bottom: 14rpx;
+  padding: 24rpx 22rpx;
+  border-bottom: 1rpx solid rgba(23, 22, 25, 0.07);
 }
 
 .drawer-session:active {
-  transform: scale(0.985);
+  border-radius: 12rpx;
+  background: rgba(23, 22, 25, 0.035);
 }
 
 .drawer-session-copy {
@@ -1065,26 +1147,17 @@ export default {
 }
 
 .drawer-session-time {
-  color: #96929b;
-  font-size: var(--font-caption);
+  margin-top: 8rpx;
+  color: rgba(23, 22, 25, 0.36);
+  font-size: calc(var(--font-caption) - 2rpx);
   letter-spacing: 0;
 }
 
 .drawer-session-summary {
-  margin-top: 8rpx;
-  font-size: var(--font-body);
+  color: rgba(23, 22, 25, 0.82);
+  font-size: calc(var(--font-body) - 2rpx);
   font-weight: 700;
-}
-
-.drawer-session-del {
-  display: flex;
-  width: 48rpx;
-  height: 48rpx;
-  flex: 0 0 48rpx;
-  align-items: center;
-  justify-content: center;
-  color: #aaa6ae;
-  font-size: 32rpx;
+  line-height: 1.4;
 }
 
 .drawer-tail {

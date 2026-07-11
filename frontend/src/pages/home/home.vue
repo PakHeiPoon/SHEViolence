@@ -17,7 +17,6 @@
     <view class="hero">
       <image class="mascot" src="/static/icons/mascot.png" mode="aspectFit" />
       <text class="hero-title">需要帮助时，\n我会陪你想办法。</text>
-      <text class="hero-note">你可以从一句话开始</text>
     </view>
 
     <view class="bottom-area">
@@ -238,7 +237,7 @@ export default {
 
 .hero {
   position: absolute;
-  top: 47%;
+  top: 62%;
   left: 50%;
   display: flex;
   width: 100%;
@@ -250,22 +249,16 @@ export default {
 .mascot {
   width: 320rpx;
   height: 260rpx;
-  margin-bottom: 28rpx;
+  margin-bottom: 8rpx;
 }
 
 .hero-title {
   max-width: 620rpx;
   text-align: center;
   font-family: "Songti SC", "STSong", serif;
-  font-size: var(--font-intro);
+  font-size: calc(var(--font-intro) - 6rpx);
   font-weight: 700;
   line-height: 1.38;
-}
-
-.hero-note {
-  margin-top: 18rpx;
-  color: #aaa6ae;
-  font-size: var(--font-meta);
 }
 
 .bottom-area {
@@ -294,7 +287,7 @@ export default {
   min-width: 0;
   height: 72rpx;
   flex: 1;
-  font-size: var(--font-body);
+  font-size: 24rpx;
 }
 
 .prompt-placeholder {
@@ -312,7 +305,7 @@ export default {
   border-radius: 40rpx;
   background: #171519;
   color: #fff;
-  font-size: var(--font-body);
+  font-size: 24rpx;
   font-weight: 700;
 }
 
@@ -377,18 +370,16 @@ export default {
 }
 
 .icon-window {
-  position: relative;
+  display: flex;
   width: 50rpx;
   height: 50rpx;
-  overflow: hidden;
+  align-items: center;
+  justify-content: center;
 }
 
 .nav-icon {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 160rpx;
-  height: 160rpx;
+  width: 50rpx;
+  height: 50rpx;
   opacity: 0.75;
 }
 
@@ -456,7 +447,7 @@ export default {
 
 .history-title {
   font-family: "Avenir Next", "PingFang SC", sans-serif;
-  font-size: var(--font-intro);
+  font-size: calc(var(--font-feature) - 2rpx);
   font-weight: 700;
   letter-spacing: 0;
 }
@@ -504,13 +495,13 @@ export default {
   flex-direction: column;
   align-items: center;
   color: rgba(23, 22, 25, 0.48);
-  font-size: var(--font-body);
+  font-size: calc(var(--font-body) - 2rpx);
 }
 
 .empty-note {
   margin-top: 12rpx;
   color: rgba(23, 22, 25, 0.3);
-  font-size: var(--font-meta);
+  font-size: calc(var(--font-meta) - 2rpx);
 }
 
 .history-item {
@@ -529,7 +520,7 @@ export default {
 .history-summary {
   overflow: hidden;
   color: rgba(23, 22, 25, 0.82);
-  font-size: var(--font-body);
+  font-size: calc(var(--font-body) - 2rpx);
   line-height: 1.4;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -538,7 +529,7 @@ export default {
 .history-meta {
   margin-top: 8rpx;
   color: rgba(23, 22, 25, 0.36);
-  font-size: var(--font-caption);
+  font-size: calc(var(--font-caption) - 2rpx);
 }
 
 @keyframes overlay-in {
@@ -550,9 +541,8 @@ export default {
 }
 
 @media screen and (max-height: 650px) {
-  .hero { top: 43%; }
-  .mascot { width: 250rpx; height: 210rpx; margin-bottom: 12rpx; }
+  .hero { top: 49%; }
+  .mascot { width: 250rpx; height: 210rpx; margin-bottom: 4rpx; }
   .hero-title { font-size: var(--font-feature); }
-  .hero-note { display: none; }
 }
 </style>
