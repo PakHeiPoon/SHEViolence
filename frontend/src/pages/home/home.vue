@@ -194,10 +194,10 @@ export default {
   justify-content: center;
   gap: 10rpx;
   box-sizing: border-box;
-  border: 1rpx solid #FFFFFF;
+  border: 1rpx solid rgba(28, 25, 33, 0.06);
   border-radius: 50%;
-  background: #FDFDFD;
-  box-shadow: 0 18rpx 50rpx rgba(32, 29, 39, 0.08);
+  background: #fff;
+  box-shadow: 0 8rpx 24rpx rgba(32, 29, 39, 0.05);
 }
 
 .menu-line {
@@ -220,10 +220,10 @@ export default {
   height: 78rpx;
   padding: 0 32rpx;
   box-sizing: border-box;
-  border: 1rpx solid #FFFFFF;
+  border: 1rpx solid rgba(28, 25, 33, 0.06);
   border-radius: 44rpx;
-  background: #FDFDFD;
-  box-shadow: 0 18rpx 50rpx rgba(32, 29, 39, 0.07);
+  background: #fff;
+  box-shadow: 0 8rpx 24rpx rgba(32, 29, 39, 0.05);
   font-family: "Avenir Next", "PingFang SC", sans-serif;
   font-size: var(--font-body);
   font-weight: 700;
@@ -277,17 +277,17 @@ export default {
   gap: 20rpx;
   padding: 10rpx 12rpx 10rpx 34rpx;
   box-sizing: border-box;
-  border: 1rpx solid rgba(28, 25, 33, 0.035);
+  border: 1rpx solid rgba(28, 25, 33, 0.05);
   border-radius: 56rpx;
   background: #fff;
-  box-shadow: 0 20rpx 62rpx rgba(35, 31, 45, 0.09);
+  box-shadow: 0 10rpx 30rpx rgba(35, 31, 45, 0.05);
 }
 
 .prompt-input {
   min-width: 0;
   height: 72rpx;
   flex: 1;
-  font-size: 22rpx;
+  font-size: var(--font-meta);
 }
 
 .prompt-placeholder {
@@ -305,7 +305,7 @@ export default {
   border-radius: 40rpx;
   background: #171519;
   color: #fff;
-  font-size: 22rpx;
+  font-size: var(--font-meta);
   font-weight: 700;
 }
 
@@ -344,12 +344,10 @@ export default {
   align-items: center;
   justify-content: space-around;
   padding: 0 18rpx;
-  border: 1rpx solid rgba(28, 25, 33, 0.035);
+  border: 1rpx solid rgba(28, 25, 33, 0.05);
   border-radius: 58rpx;
-  background: rgba(235, 236, 236, 0.42);
-  backdrop-filter: blur(36rpx) saturate(1.8);
-  -webkit-backdrop-filter: blur(36rpx) saturate(1.8);
-  box-shadow: 0 18rpx 54rpx rgba(35, 31, 45, 0.08);
+  background: #fff;
+  box-shadow: 0 10rpx 30rpx rgba(35, 31, 45, 0.05);
 }
 
 .nav-button {
@@ -390,11 +388,11 @@ export default {
   flex: 0 0 112rpx;
   align-items: center;
   justify-content: center;
+  border: 1rpx solid rgba(28, 25, 33, 0.05);
   border-radius: 50%;
-  background: rgba(235, 236, 236, 0.42);
-  backdrop-filter: blur(36rpx) saturate(1.8);
-  -webkit-backdrop-filter: blur(36rpx) saturate(1.8);
-  box-shadow: 0 18rpx 54rpx rgba(35, 31, 45, 0.1);
+  box-sizing: border-box;
+  background: #fff;
+  box-shadow: 0 10rpx 30rpx rgba(35, 31, 45, 0.06);
   transition: transform 0.16s ease;
 }
 
