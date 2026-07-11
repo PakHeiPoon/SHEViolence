@@ -7,12 +7,17 @@ const CHIPS = {
   legal: ['人身安全保护令怎么申请？', '只有辱骂没动手算家暴吗？', '离婚时家暴证据怎么认定？']
 }
 
-// 结论卡片：AI 回复里出现 ≥2 个可执行行动信号时，生成一张可操作卡片
-const ACTION_HINTS = ['报警', '110', '12338', '保护令', '证据', '取证', '离开', '庇护', '验伤', '伤情', '告诫书', '申请', '记录']
-function detectCard(reply) {
-  const hits = ACTION_HINTS.filter(w => reply.indexOf(w) > -1)
-  if (hits.length < 2) return null
-  return { summary: reply.length > 64 ? reply.slice(0, 62) + '…' : reply, saved: false }
+// 结论卡片：优先解析 AI 主动输出的 [[CARD:摘要]] 标记；否则命中强行动词即兜底出卡
+const STRONG_HINTS = ['报警', '110', '12338', '保护令', '证据', '取证', '告诫书', '验伤', '庇护', '离开', '安全计划']
+function extractCard(reply) {
+  const m = reply.match(/\[\[CARD:([\s\S]+?)\]\]/)
+  if (m) {
+    const text = reply.replace(/\s*\[\[CARD:[\s\S]+?\]\]\s*/g, '').trim()
+    return { text, card: { summary: m[1].trim(), saved: false } }
+  }
+  const hit = STRONG_HINTS.some(w => reply.indexOf(w) > -1)
+  const card = hit ? { summary: reply.length > 64 ? reply.slice(0, 62) + '…' : reply, saved: false } : null
+  return { text: reply, card }
 }
 
 Page({
@@ -75,7 +80,8 @@ Page({
         msg = { role: 'assistant', content: r.answer, sources: r.sources }
       } else {
         const r = await api.chat(messages)
-        msg = { role: 'assistant', content: r.reply, card: detectCard(r.reply) }
+        const parsed = extractCard(r.reply)
+        msg = { role: 'assistant', content: parsed.text, card: parsed.card }
       }
       this.setData({
         messages: this.data.messages.concat([msg]),
