@@ -36,8 +36,19 @@ async function callApi(cfg, apiPath, body, timeoutMs = 30000) {
 
 // 批量 embedding
 async function embed(cfg, texts) {
-  const data = await callApi(cfg, '/embeddings', { model: cfg.embeddingModel, input: texts })
-  return data.data.map(d => d.embedding)
+  // 降维到 256（text-embedding-3 支持）：索引体积压到 1/6，检索质量仍优于旧一代
+  // 带重试：大批量构建时防单次网络抖动导致整体失败
+  let lastErr
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      const data = await callApi(cfg, '/embeddings', { model: cfg.embeddingModel, input: texts, dimensions: cfg.embeddingDim || 256 })
+      return data.data.map(d => d.embedding)
+    } catch (e) {
+      lastErr = e
+      await new Promise(r => setTimeout(r, 1500))
+    }
+  }
+  throw lastErr
 }
 
 function cosine(a, b) {

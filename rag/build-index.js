@@ -48,7 +48,12 @@ async function main() {
     process.exit(1)
   }
 
-  const files = fs.readdirSync(CORPUS_DIR).filter(f => /\.(md|txt)$/i.test(f))
+  const walk = (dir) => fs.readdirSync(dir, { withFileTypes: true }).flatMap(e => {
+    if (e.name.startsWith('.')) return []
+    const p = path.join(dir, e.name)
+    return e.isDirectory() ? walk(p) : (/\.(md|txt)$/i.test(e.name) ? [p] : [])
+  })
+  const files = walk(CORPUS_DIR)
   if (!files.length) {
     console.error('❌ rag/corpus/ 下没有 .md/.txt 语料文件')
     process.exit(1)
@@ -56,9 +61,12 @@ async function main() {
 
   const chunks = []
   for (const f of files) {
-    const text = fs.readFileSync(path.join(CORPUS_DIR, f), 'utf8')
+    const text = fs.readFileSync(f, 'utf8')
+    const source = path.relative(CORPUS_DIR, f)
     for (const c of chunkText(text)) {
-      chunks.push({ id: 'c' + chunks.length, source: f, text: c })
+      const t = c.trim()
+      if (t.length < 10) continue
+      chunks.push({ id: 'c' + chunks.length, source, text: t })
     }
   }
   console.log(`📚 ${files.length} 个文件 → ${chunks.length} 个知识块，开始 embedding…`)
@@ -72,8 +80,9 @@ async function main() {
 
   const payload = JSON.stringify({
     model: cfg.embeddingModel,
+    dim: cfg.embeddingDim || 256,
     builtAt: new Date().toISOString(),
-    files,
+    files: files.map(f => path.relative(CORPUS_DIR, f)),
     chunks
   })
   fs.writeFileSync(OUT, payload)

@@ -18,7 +18,7 @@ if (!index) {
   console.error('❌ 缺少索引文件 rag/index.json，请先运行: node rag/build-index.js')
   process.exit(1)
 }
-console.log(`📖 已加载索引：${index.chunks.length} 块（${index.files.join(', ')}）`)
+console.log(`📖 已加载索引：${index.chunks.length} 块 / ${index.files.length} 篇`)
 
 async function legalQa(question) {
   const hits = await retrieve(cfg, index, question)

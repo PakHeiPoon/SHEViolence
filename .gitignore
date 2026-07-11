@@ -12,3 +12,7 @@ rag/config.local.js
 
 # 开发者工具本地配置
 project.private.config.json
+
+# RAG 向量索引（本地 build 生成的大文件，勿入库；改语料后各自重建）
+rag/index.json
+cloudfunctions/rag/index.json

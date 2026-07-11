@@ -47,7 +47,7 @@ async function api(pathName, body, timeout) {
 async function retrieve(question) {
   let scored
   try {
-    const emb = await api('/embeddings', { model: EMB_MODEL, input: [question] })
+    const emb = await api('/embeddings', { model: EMB_MODEL, input: [question], dimensions: 256 })
     const qv = emb.data[0].embedding
     scored = index.chunks.map(c => ({ c, score: cosine(qv, c.vec) }))
   } catch (e) {

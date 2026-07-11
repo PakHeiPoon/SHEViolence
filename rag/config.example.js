@@ -3,6 +3,7 @@ module.exports = {
   apiKey: process.env.OPENAI_NEXT_KEY || '',
   baseUrl: 'https://api.openai-next.com/v1',
   embeddingModel: 'text-embedding-3-small',
+  embeddingDim: 256,
   genModel: 'deepseek-v3',
   port: 3900,
   topK: 4,          // 检索返回的资料条数
