@@ -86,7 +86,8 @@ exports.main = async (event) => {
       }
     }
 
-    const reply = await llm(messages, 12000)
+    // 图片场景收紧单次超时（9s×2次尝试+下载 ≤ 云函数20s上限），避免整体被掐退 mock
+    const reply = await llm(messages, event.imageFileID ? 9000 : 12000)
 
     // 触发搜索：模型按协议发 [[SEARCH]]，或嘴上说要查/搜（协议违规兜底，绝不留死胡同）
     const sm = reply.match(/\[\[SEARCH[:：]([^\]]+)\]\]/)

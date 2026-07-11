@@ -50,10 +50,10 @@ function rqRag(path, body) {
   })
 }
 
-// 云函数封装（cloud 模式，待正式 AppID 后启用）
+// 云函数封装：放宽调用超时（默认15s会掐断图片/长文场景）
 function callCloud(name, data) {
   return new Promise((resolve, reject) => {
-    wx.cloud.callFunction({ name, data, success: r => resolve(r.result), fail: reject })
+    wx.cloud.callFunction({ name, data, timeout: 30000, success: r => resolve(r.result), fail: reject })
   })
 }
 
@@ -124,7 +124,11 @@ async function chat(messages, onStatus) {
       if (m === 'cloud') {
         let imageFileID = ''
         if (hasImage) imageFileID = (await uploadImage(last.image)).fileID
-        const msgs = messages.slice(-12).map(x => ({ role: x.role, content: x.content }))
+        // 历史里发过图的消息打上标记，避免模型误以为"对话里从没有图片"
+        const msgs = messages.slice(-12).map(x => ({
+          role: x.role,
+          content: x.image ? '[我发了一张照片]' + (x.content ? ' ' + x.content : '') : x.content
+        }))
         let r = await callCloud('chat', { messages: msgs, imageFileID })
         // Agent 决定联网：先亮出搜索词（过程可见），再二次调用执行搜索+撰写
         if (r && r.needSearch) {
