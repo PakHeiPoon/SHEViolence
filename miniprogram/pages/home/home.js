@@ -49,7 +49,7 @@ Page({
   },
 
   goChat() { wx.navigateTo({ url: '/pages/chat/chat' }) },
-  goLegal() { wx.navigateTo({ url: '/pages/legal/legal' }) },
+  goLegal() { wx.navigateTo({ url: '/pages/chat/chat?mode=legal' }) },
   goRisk() { wx.navigateTo({ url: '/pages/risk/risk' }) },
   goEvidence() { wx.navigateTo({ url: '/pages/evidence/evidence' }) },
   goCommunity() { wx.redirectTo({ url: '/pages/community/community' }) },

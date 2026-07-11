@@ -1,17 +1,35 @@
-<view class="chatbox">
+<view class="chat-page">
 
-  <!-- 顶部会话栏 -->
-  <view class="topbar">
-    <view class="tb-btn" bindtap="openSessions">☰ 会话</view>
-    <view class="tb-title">暖芽</view>
-    <view class="tb-btn tb-new" bindtap="newSession">＋ 新对话</view>
+  <!-- 顶部 Agent 切换器 -->
+  <view class="agent-topbar">
+    <view class="menu-button" hover-class="press" bindtap="openSessions">
+      <view class="menu-line"></view>
+      <view class="menu-line short"></view>
+    </view>
+    <view class="mode-anchor">
+      <view class="brand-pill" hover-class="press" bindtap="toggleModePanel">
+        <text>{{modeLabel}}</text>
+        <text class="sparkle">✦</text>
+        <view class="chevron {{showModePanel ? 'up' : ''}}"></view>
+      </view>
+      <view class="mode-panel" wx:if="{{showModePanel}}">
+        <view class="mode-option {{item.key === mode ? 'selected' : ''}}" wx:for="{{modes}}" wx:key="key"
+          bindtap="pickMode" data-mode="{{item.key}}">
+          <view class="mode-texts">
+            <text class="mode-label">{{item.label}}</text>
+            <text class="mode-desc">{{item.desc}}</text>
+          </view>
+          <text class="mode-check" wx:if="{{item.key === mode}}">✓</text>
+        </view>
+      </view>
+    </view>
+    <view class="top-spacer"></view>
+    <view class="mode-mask" wx:if="{{showModePanel}}" bindtap="closeModePanel"></view>
   </view>
 
   <!-- 危机求助 Banner -->
   <view class="crisis {{crisisLevel >= 3 ? 'lv3' : 'lv2'}}" wx:if="{{crisisLevel >= 2}}">
-    <view class="crisis-text">
-      {{crisisLevel >= 3 ? '我们检测到你可能正处于危险中' : '你的安全最重要'}}，需要时请立即联系：
-    </view>
+    <view class="crisis-text">{{crisisLevel >= 3 ? '我们检测到你可能正处于危险中' : '你的安全最重要'}}，需要时请立即联系：</view>
     <view class="crisis-actions">
       <view class="crisis-btn b110" catchtap="call110">📞 110 报警</view>
       <view class="crisis-btn b12338" catchtap="call12338">📞 12338</view>
@@ -19,46 +37,44 @@
     </view>
   </view>
 
-  <view class="notice">🔒 对话仅保存在本机 · 可发文字或图片 · AI 建议仅供参考</view>
-
   <!-- 消息区 -->
   <scroll-view class="msgs" scroll-y scroll-into-view="{{toView}}" scroll-with-animation>
-    <view class="welcome" wx:if="{{messages.length === 0}}">
-      <image class="w-mascot" src="/static/mascot.png" mode="aspectFit" />
-      <view class="w-title">你好，我是暖芽</view>
-      <view class="w-sub">这里很安全，你可以慢慢说，我会一直在。</view>
-      <view class="chips">
-        <view class="chip" wx:for="{{chips}}" wx:key="*this" bindtap="tapChip" data-text="{{item}}">{{item}}</view>
-      </view>
+    <view class="welcome-hero" wx:if="{{messages.length === 0}}">
+      <image class="welcome-mascot" src="/static/mascot.png" mode="aspectFit" />
+      <view class="welcome-title">{{mode === 'legal' ? '法律问题，我来帮你理清' : '把想说的都告诉我\n我会陪你一起面对'}}</view>
+      <view class="welcome-note">{{mode === 'legal' ? '依据 569 篇法律知识库与真实案例作答' : '这里是安全的，你可以慢慢开始'}}</view>
     </view>
 
     <block wx:for="{{messages}}" wx:key="index">
-      <view class="row {{item.role === 'user' ? 'right' : 'left'}}">
-        <view class="bubble {{item.role === 'user' ? 'user' : 'ai'}}">
-          <image wx:if="{{item.image}}" class="bubble-img" src="{{item.image}}" mode="widthFix" />
+      <view class="msg-row {{item.role === 'user' ? 'user' : 'agent'}}">
+        <image wx:if="{{item.role !== 'user'}}" class="mini-avatar" src="/static/avatar.png" mode="aspectFill" />
+        <view class="bubble {{item.role === 'user' ? 'user' : 'agent'}}">
+          <image wx:if="{{item.image}}" class="msg-img" src="{{item.image}}" mode="widthFix" />
           <text wx:if="{{item.content}}">{{item.content}}</text>
-          <view class="sources" wx:if="{{item.sources && item.sources.length}}">
-            <view class="src" wx:for="{{item.sources}}" wx:for-item="s" wx:key="ref"
-              bindtap="copySource" data-url="{{s.url || ''}}">
-              <text class="src-ref">🌐 [{{s.ref}}]</text><text class="src-name">{{s.source}}</text>
+
+          <view class="action-card" wx:if="{{item.card}}">
+            <view class="action-card-head"><text>💡 一条可以行动的建议</text></view>
+            <view class="action-card-body">{{item.card.summary}}</view>
+            <view class="action-card-btns">
+              <view class="ac-btn {{item.card.saved ? 'done' : ''}}" catchtap="saveCardToEvidence" data-idx="{{index}}">{{item.card.saved ? '✓ 已存到我的记录' : '＋ 补充到证据页'}}</view>
+              <view class="ac-btn warn" catchtap="goSos">一键求助</view>
             </view>
           </view>
-        </view>
-      </view>
-      <view class="card-row" wx:if="{{item.card}}">
-        <view class="concl-card">
-          <view class="cc-head">💡 一条可以行动的建议</view>
-          <view class="cc-body">{{item.card.summary}}</view>
-          <view class="cc-actions">
-            <view class="cc-btn {{item.card.saved ? 'done' : ''}}" catchtap="saveCardToEvidence" data-idx="{{index}}">{{item.card.saved ? '✓ 已存到我的记录' : '＋ 存到我的记录'}}</view>
-            <view class="cc-btn cc-sos" catchtap="sosFromCard">一键求助</view>
+
+          <view class="sources" wx:if="{{item.sources && item.sources.length}}">
+            <text class="sources-title">资料来源</text>
+            <view class="source" wx:for="{{item.sources}}" wx:for-item="s" wx:key="ref" catchtap="copySource" data-url="{{s.url || ''}}">
+              <text class="source-title">{{s.type === 'web' ? '🌐' : '📚'}} [{{s.ref}}] {{s.source}}</text>
+              <text class="source-ex" wx:if="{{s.excerpt}}">{{s.excerpt}}</text>
+            </view>
           </view>
         </view>
       </view>
     </block>
 
-    <view class="row left" wx:if="{{aiTyping}}">
-      <view class="bubble ai typing">
+    <view class="msg-row agent" wx:if="{{aiTyping}}">
+      <image class="mini-avatar" src="/static/avatar.png" mode="aspectFill" />
+      <view class="bubble agent typing">
         <view class="dot d1"></view><view class="dot d2"></view><view class="dot d3"></view>
         <text class="status-text" wx:if="{{agentStatus}}">{{agentStatus}}</text>
       </view>
@@ -66,23 +82,30 @@
     <view id="anchor-bottom" style="height: 2rpx;"></view>
   </scroll-view>
 
+  <!-- 快捷问题 -->
+  <scroll-view class="quick" scroll-x wx:if="{{messages.length <= 1}}">
+    <view class="quick-inner">
+      <view class="chip" wx:for="{{quick}}" wx:key="*this" bindtap="send" data-text="{{item}}">{{item}}</view>
+    </view>
+  </scroll-view>
+
   <!-- 待发图片预览 -->
   <view class="img-preview" wx:if="{{imagePath}}">
     <image class="ip-thumb" src="{{imagePath}}" mode="aspectFill" />
     <view class="ip-del" catchtap="clearImage">✕</view>
-    <view class="ip-tip">图片将发给暖暖看看</view>
+    <view class="ip-tip">图片将发给暖芽看看</view>
   </view>
 
-  <!-- 录音提示 -->
-  <view class="rec-pill" wx:if="{{recHint}}">{{recHint}}</view>
-
   <!-- 输入条 -->
-  <view class="input-bar">
-    <view class="icon-btn {{recing ? 'recing' : ''}}" bindtouchstart="voiceStart" bindtouchend="voiceStop" bindtouchcancel="voiceStop">🎤</view>
-    <view class="icon-btn" hover-class="icon-btn on" bindtap="chooseImage">📷</view>
-    <input class="input" value="{{inputValue}}" bindinput="onInput" confirm-type="send" bindconfirm="send"
-      placeholder="想说什么都可以…" placeholder-class="ph" />
-    <view class="send {{aiTyping ? 'disabled' : ''}}" bindtap="send">发送</view>
+  <view class="rec-pill" wx:if="{{recHint}}">{{recHint}}</view>
+  <view class="composer-wrap">
+    <view class="composer">
+      <view class="composer-tool" wx:if="{{mode === 'companion'}}" hover-class="press" bindtap="chooseImage">＋</view>
+      <view class="mic-button {{recing ? 'recing' : ''}}" bindtouchstart="voiceStart" bindtouchend="voiceStop" bindtouchcancel="voiceStop">🎤</view>
+      <input class="composer-input" value="{{inputValue}}" bindinput="onInput" confirm-type="send" bindconfirm="send"
+        placeholder="{{mode === 'legal' ? '输入你的法律问题…' : '想说什么都可以…'}}" placeholder-class="ph" />
+      <view class="send-button {{aiTyping ? 'disabled' : ''}}" bindtap="send">发送</view>
+    </view>
   </view>
 
   <!-- 会话抽屉 -->
@@ -93,8 +116,7 @@
       <view class="drawer-new" bindtap="newSession">＋ 新对话</view>
     </view>
     <scroll-view class="drawer-list" scroll-y>
-      <view class="sess-item {{item.active ? 'active' : ''}}" wx:for="{{sessions}}" wx:key="id"
-        bindtap="switchSession" data-id="{{item.id}}">
+      <view class="sess-item {{item.active ? 'active' : ''}}" wx:for="{{sessions}}" wx:key="id" bindtap="switchSession" data-id="{{item.id}}">
         <view class="sess-info">
           <view class="sess-title">{{item.title}}</view>
           <view class="sess-time">{{item.time}}</view>
