@@ -1,5 +1,5 @@
 <view class="chatbox">
-  <view class="notice">⚖️ 依据《反家暴法》、司法解释与权威案例作答 · 回答标注来源 · 仅供参考</view>
+  <view class="notice">⚖️ 双证据源：📚 569 篇法律知识库 + 🌐 实时网络检索 · 每个要点标注依据 · 仅供参考</view>
 
   <scroll-view class="msgs" scroll-y scroll-into-view="{{toView}}" scroll-with-animation>
     <view class="welcome" wx:if="{{messages.length === 0}}">
@@ -16,8 +16,9 @@
         <view class="bubble {{item.role === 'user' ? 'user' : 'ai'}}">
           <text>{{item.content}}</text>
           <view class="sources" wx:if="{{item.sources && item.sources.length}}">
-            <view class="src" wx:for="{{item.sources}}" wx:for-item="s" wx:key="ref">
-              <text class="src-ref">[{{s.ref}}]</text><text class="src-name">{{s.source}}</text>
+            <view class="src" wx:for="{{item.sources}}" wx:for-item="s" wx:key="ref"
+              bindtap="copySource" data-url="{{s.url || ''}}">
+              <text class="src-ref">{{s.type === 'web' ? '🌐' : '📚'}} [{{s.ref}}]</text><text class="src-name">{{s.source}}</text>
             </view>
           </view>
         </view>

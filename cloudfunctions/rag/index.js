@@ -10,11 +10,35 @@ const EMB_MODEL = 'text-embedding-3-small'
 const TOP_K = 4
 const MIN_SCORE = 0.25
 
-const RAG_SYSTEM = `你是反家暴法律援助助手。请仅依据我提供的【资料】回答用户问题：
-- 引用资料时标注编号，如「根据资料[1]」；
+const RAG_SYSTEM = `你是反家暴法律援助助手。请仅依据我提供的资料回答用户问题：
+- 资料分两类：【知识库资料】编号 K1、K2…（法条/司法解释/典型案例，优先采信）；【网络资料】编号 W1、W2…（补充最新信息，采信前注意甄别）；
+- 每个要点末尾必须标注依据编号，如「（K1)」「（W2)」；没有资料支撑的内容绝不要写；
 - 资料里没有的内容明确说"资料中未提及"，并建议拨打12338咨询，绝不编造；
-- 用通俗中文回答，条理清晰，不超过250字；先给结论，再给步骤；
+- 用通俗中文回答，条理清晰，不超过280字；先给结论，再给步骤；
 - 纯文本输出，禁止 markdown 符号（**、#、-列表等），分点用 1. 2. 3.；始终使用简体中文。`
+
+// Tavily 网络搜索（第二证据源）；未配 TAVILY_KEY 或失败时自动跳过，绝不阻塞
+async function tavily(question) {
+  if (!process.env.TAVILY_KEY) return []
+  try {
+    const res = await axios.post('https://api.tavily.com/search', {
+      query: '中国 反家庭暴力 ' + question,
+      max_results: 3,
+      search_depth: 'basic'
+    }, {
+      headers: { Authorization: 'Bearer ' + process.env.TAVILY_KEY },
+      timeout: 6000
+    })
+    return (res.data.results || []).map(r => ({
+      title: String(r.title || '').slice(0, 60),
+      url: r.url,
+      content: String(r.content || '').slice(0, 300)
+    }))
+  } catch (e) {
+    console.warn('[rag] tavily 搜索失败(跳过):', e.message)
+    return []
+  }
+}
 
 let index = null
 try {
@@ -70,8 +94,11 @@ exports.main = async (event) => {
   if (!index) return { answer: MOCK_ANSWER, sources: [], source: 'cloud-mock' }
 
   try {
-    const hits = await retrieve(question)
-    const materials = hits.map(h => `[${h.ref}]（来源：${h.source}）${h.text}`).join('\n\n')
+    // 双证据源并行：本地知识库向量检索 + Tavily 网络搜索
+    const [hits, webs] = await Promise.all([retrieve(question), tavily(question)])
+    const kbPart = hits.map((h, i) => `[K${i + 1}]（来源：${h.source}）${h.text}`).join('\n\n')
+    const webPart = webs.map((w, i) => `[W${i + 1}]（来源：${w.title} ${w.url}）${w.content}`).join('\n\n')
+    const materials = ['【知识库资料】', kbPart || '（无）', '', '【网络资料】', webPart || '（无）'].join('\n')
 
     let answer = ''
     for (const model of GEN_MODELS) {
@@ -94,7 +121,13 @@ exports.main = async (event) => {
     if (!answer) throw new Error('全部生成模型失败')
     return {
       answer,
-      sources: hits.map(h => ({ ref: h.ref, source: h.source, excerpt: h.text.slice(0, 60) + (h.text.length > 60 ? '…' : ''), score: h.score })),
+      sources: hits.map((h, i) => ({
+        ref: 'K' + (i + 1), type: 'kb', source: h.source,
+        excerpt: h.text.slice(0, 60) + (h.text.length > 60 ? '…' : ''), score: h.score
+      })).concat(webs.map((w, i) => ({
+        ref: 'W' + (i + 1), type: 'web', source: w.title, url: w.url,
+        excerpt: w.content.slice(0, 60) + '…'
+      }))),
       source: 'cloud'
     }
   } catch (e) {

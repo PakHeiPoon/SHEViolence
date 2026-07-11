@@ -46,13 +46,13 @@ Page({
       messages: this.data.messages.concat([{ role: 'user', content: text }]),
       inputValue: '',
       aiTyping: true,
-      agentStatus: '🔍 正在检索 569 篇知识库…',
+      agentStatus: '🔍 检索 569 篇知识库 + 🌐 全网搜索中…',
       toView: 'anchor-bottom'
     })
     try {
       const r = await api.legalQa(text)
       const n = (r.sources && r.sources.length) || 0
-      this.setData({ agentStatus: '✍️ deepseek-v3 依据 ' + n + ' 篇资料作答…' })
+      this.setData({ agentStatus: '✍️ Claude 正在依据 ' + n + ' 条资料撰写…' })
       await new Promise(res => setTimeout(res, 500))
       this.streamReply(r.answer, r.sources)
     } catch (e) {
@@ -81,5 +81,12 @@ Page({
     step()
   },
 
-  onUnload() { if (this._typer) clearTimeout(this._typer) }
+  onUnload() { if (this._typer) clearTimeout(this._typer) },
+
+  // 点网络来源可复制链接（小程序内无法直接打开外链）
+  copySource(e) {
+    const url = e.currentTarget.dataset.url
+    if (!url) return
+    wx.setClipboardData({ data: url, success: () => wx.showToast({ title: '来源链接已复制', icon: 'none' }) })
+  }
 })
