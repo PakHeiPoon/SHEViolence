@@ -18,24 +18,9 @@ Page({
     })
   },
 
-  // 一键求助：轻触弹出选项
+  // 一键求助：进入紧急求助页（长按仍直拨110）
   sosTap() {
-    const contacts = wx.getStorageSync('emg_contacts') || []
-    const items = ['拨打 110（报警）', '拨打 12338（妇女维权热线）', '查看我的当前位置']
-      .concat(contacts.slice(0, 3).map(c => '联系 ' + c.name))
-    wx.showActionSheet({
-      itemList: items,
-      success: res => {
-        const i = res.tapIndex
-        if (i === 0) wx.makePhoneCall({ phoneNumber: '110' })
-        else if (i === 1) wx.makePhoneCall({ phoneNumber: '12338' })
-        else if (i === 2) this.showLocation()
-        else {
-          const c = contacts[i - 3]
-          if (c) wx.makePhoneCall({ phoneNumber: c.tel })
-        }
-      }
-    })
+    wx.redirectTo({ url: '/pages/sos/sos' })
   },
 
   // 长按大按钮：直接确认拨 110
@@ -63,11 +48,11 @@ Page({
     })
   },
 
-  goChat() { wx.switchTab({ url: '/pages/chat/chat' }) },
+  goChat() { wx.navigateTo({ url: '/pages/chat/chat' }) },
   goLegal() { wx.navigateTo({ url: '/pages/legal/legal' }) },
   goRisk() { wx.navigateTo({ url: '/pages/risk/risk' }) },
   goEvidence() { wx.navigateTo({ url: '/pages/evidence/evidence' }) },
-  goCommunity() { wx.switchTab({ url: '/pages/community/community' }) },
+  goCommunity() { wx.redirectTo({ url: '/pages/community/community' }) },
 
   toggleCard(e) {
     const id = e.currentTarget.dataset.id

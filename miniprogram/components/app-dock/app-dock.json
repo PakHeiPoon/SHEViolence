@@ -1,0 +1,6 @@
+{
+  "component": true,
+  "usingComponents": {
+    "escape-btn": "/components/escape-btn/escape-btn"
+  }
+}

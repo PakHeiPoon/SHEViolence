@@ -1,0 +1,89 @@
+<view class="sos-page safe-bottom">
+
+  <view class="title-block fade-up">
+    <text class="page-title">别怕，帮助就在身边</text>
+    <text class="page-subtitle">下面每一个按钮，都能立刻联系到能帮你的人</text>
+  </view>
+
+  <!-- 紧急热线大字卡 -->
+  <view class="emergency-card fade-up delay-1" bindtap="call110" hover-class="press">
+    <view class="emergency-top">
+      <view class="phone-icon-window">🚨</view>
+      <view class="danger-status">正在发生的暴力 · 优先拨打</view>
+    </view>
+    <text class="emergency-label">报警电话</text>
+    <text class="emergency-number">110</text>
+    <view class="emergency-action">
+      <text>立即拨打</text>
+      <text>›</text>
+    </view>
+    <text class="silent-tip">接通后说清：所在地址 · 正在遭受家庭暴力 · 尽量保持通话</text>
+  </view>
+
+  <!-- 快速行动格 -->
+  <text class="section-title-local fade-up delay-2">更多求助渠道</text>
+  <view class="quick-grid fade-up delay-2">
+    <view class="quick-action rights" bindtap="call" data-tel="12338" hover-class="press">
+      <view class="quick-icon">⚖️</view>
+      <view class="quick-copy">
+        <text class="quick-title">妇女维权热线</text>
+        <text class="quick-note">法律咨询 · 庇护安排 · 属地资源</text>
+      </view>
+      <text class="quick-value">12338</text>
+    </view>
+    <view class="quick-action medical" bindtap="call" data-tel="120" hover-class="press">
+      <view class="quick-icon">🏥</view>
+      <view class="quick-copy">
+        <text class="quick-title">急救电话</text>
+        <text class="quick-note">受伤需要紧急救治</text>
+      </view>
+      <text class="quick-value">120</text>
+    </view>
+    <view class="quick-action location" bindtap="showLocation" hover-class="press">
+      <view class="quick-icon">📍</view>
+      <view class="quick-copy">
+        <text class="quick-title">我的当前位置</text>
+        <text class="quick-note">打开地图，便于告知救助人员</text>
+      </view>
+      <text class="quick-value arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 安全三步 -->
+  <text class="section-title-local fade-up delay-3">此刻的安全三步</text>
+  <view class="safety-steps fade-up delay-3">
+    <view class="safety-step">
+      <view class="step-icon">🚪</view>
+      <text class="step-title">靠近出口</text>
+      <text class="step-note">移到离大门近、有人能听见的房间</text>
+    </view>
+    <view class="safety-step">
+      <view class="step-icon">🔪</view>
+      <text class="step-title">避开危险区</text>
+      <text class="step-note">远离厨房、浴室等有利器的封闭空间</text>
+    </view>
+    <view class="safety-step">
+      <view class="step-icon">📢</view>
+      <text class="step-title">大声呼救</text>
+      <text class="step-note">引起邻里注意，让更多人知道</text>
+    </view>
+  </view>
+
+  <!-- 紧急联系人 -->
+  <text class="section-title-local fade-up delay-4">我的紧急联系人</text>
+  <view class="contact-group fade-up delay-4" wx:if="{{contacts.length}}">
+    <view class="contact-row" wx:for="{{contacts}}" wx:key="tel">
+      <view class="contact-icon">🫂</view>
+      <view class="contact-copy">
+        <text>{{item.name}}</text>
+        <text>{{item.tel}}</text>
+      </view>
+      <view class="contact-call" bindtap="call" data-tel="{{item.tel}}">拨打</view>
+    </view>
+  </view>
+  <view class="contact-empty fade-up delay-4" wx:else bindtap="goMine">
+    还没有设置紧急联系人 · 去「设置」添加 ›
+  </view>
+
+  <app-dock active="sos" />
+</view>

@@ -86,6 +86,6 @@ Page({
   unlock() {
     getApp().globalData.unlocked = true
     this.setData({ amount: '', note: '' })
-    wx.switchTab({ url: '/pages/home/home' })
+    wx.redirectTo({ url: '/pages/home/home' })
   }
 })

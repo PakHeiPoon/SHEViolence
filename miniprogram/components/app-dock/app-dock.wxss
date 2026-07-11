@@ -1,0 +1,57 @@
+.dock-row {
+  position: fixed;
+  z-index: 90;
+  right: 28rpx;
+  bottom: calc(env(safe-area-inset-bottom) + 24rpx);
+  left: 28rpx;
+  display: flex;
+  align-items: center;
+  gap: 18rpx;
+}
+
+/* 胶囊导航 */
+.nav-dock {
+  position: relative;
+  flex: 1;
+  display: flex;
+  height: 112rpx;
+  border: 1rpx solid #FFFFFF;
+  border-radius: 60rpx;
+  background: #FDFDFD;
+  box-shadow: 0 18rpx 50rpx rgba(32, 29, 39, 0.10);
+  overflow: hidden;
+}
+.dock-bubble {
+  position: absolute;
+  top: 10rpx;
+  bottom: 10rpx;
+  width: calc(25% - 16rpx);
+  border-radius: 48rpx;
+  background: #f1eff3;
+  transition: left 0.28s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+.dock-item {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dock-icon { width: 46rpx; height: 46rpx; opacity: 0.55; transition: opacity 0.2s; }
+.dock-item.active .dock-icon { opacity: 1; }
+
+/* 暖芽头像按钮：AI 是全局主角 */
+.agent-button {
+  width: 112rpx;
+  height: 112rpx;
+  flex-shrink: 0;
+  border: 1rpx solid #FFFFFF;
+  border-radius: 50%;
+  background: #FDFDFD;
+  box-shadow: 0 18rpx 50rpx rgba(32, 29, 39, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.agent-hover { transform: scale(0.94); }
+.agent-avatar { width: 92rpx; height: 92rpx; border-radius: 50%; }

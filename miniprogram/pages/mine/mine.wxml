@@ -56,5 +56,5 @@
 
   <view class="about" bindtap="about">关于「港湾」与免责声明</view>
 
-  <escape-btn />
+  <app-dock active="settings" />
 </view>

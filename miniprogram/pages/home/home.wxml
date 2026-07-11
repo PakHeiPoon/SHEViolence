@@ -60,5 +60,5 @@
     </view>
   </view>
 
-  <escape-btn />
+  <app-dock active="home" />
 </view>

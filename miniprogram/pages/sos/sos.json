@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "我的",
+  "navigationBarTitleText": "紧急求助",
   "usingComponents": {
     "app-dock": "/components/app-dock/app-dock"
   }

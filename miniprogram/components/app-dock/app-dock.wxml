@@ -1,0 +1,14 @@
+<escape-btn />
+<view class="dock-row">
+  <view class="nav-dock">
+    <view class="dock-bubble" wx:if="{{activeIndex >= 0}}" style="left: calc({{activeIndex}} * 25% + 8rpx);"></view>
+    <view class="dock-item {{active === item.key ? 'active' : ''}}"
+      wx:for="{{items}}" wx:key="key"
+      bindtap="go" data-key="{{item.key}}" data-url="{{item.url}}">
+      <image class="dock-icon" src="{{item.icon}}" mode="aspectFit" />
+    </view>
+  </view>
+  <view class="agent-button" hover-class="agent-hover" bindtap="openChat" aria-label="打开暖芽聊天">
+    <image class="agent-avatar" src="/static/avatar.png" mode="aspectFill" />
+  </view>
+</view>

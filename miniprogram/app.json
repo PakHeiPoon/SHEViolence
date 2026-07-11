@@ -8,20 +8,9 @@
     "pages/mine/mine",
     "pages/risk/risk",
     "pages/evidence/evidence",
-    "pages/legal/legal"
+    "pages/legal/legal",
+    "pages/sos/sos"
   ],
-  "tabBar": {
-    "color": "#96929b",
-    "selectedColor": "#19171c",
-    "backgroundColor": "#FFFFFF",
-    "borderStyle": "white",
-    "list": [
-      { "pagePath": "pages/home/home", "text": "首页" },
-      { "pagePath": "pages/chat/chat", "text": "倾诉" },
-      { "pagePath": "pages/community/community", "text": "社群" },
-      { "pagePath": "pages/mine/mine", "text": "我的" }
-    ]
-  },
   "window": {
     "navigationBarBackgroundColor": "#FBFCFC",
     "navigationBarTitleText": "暖芽",

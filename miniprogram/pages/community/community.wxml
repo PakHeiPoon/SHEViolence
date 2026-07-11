@@ -35,5 +35,5 @@
   <!-- 发帖入口 -->
   <view class="fab" bindtap="newPost">✏️</view>
 
-  <escape-btn />
+  <app-dock active="community" />
 </view>

@@ -48,5 +48,5 @@ Page({
     wx.makePhoneCall({ phoneNumber: e.currentTarget.dataset.tel })
   },
 
-  goChat() { wx.switchTab({ url: '/pages/chat/chat' }) }
+  goChat() { wx.navigateTo({ url: '/pages/chat/chat' }) }
 })

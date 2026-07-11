@@ -1,6 +1,6 @@
 {
-  "navigationBarTitleText": "港湾",
+  "navigationBarTitleText": "暖芽",
   "usingComponents": {
-    "escape-btn": "/components/escape-btn/escape-btn"
+    "app-dock": "/components/app-dock/app-dock"
   }
 }
