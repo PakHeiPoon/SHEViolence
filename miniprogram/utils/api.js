@@ -266,6 +266,44 @@ async function vision(filePath, desc) {
   return Object.assign({ source: 'mock' }, mockData.visionMock)
 }
 
+// ---------- 语音转文字（whisper-1，已实测可用） ----------
+async function transcribe(filePath) {
+  const m = mode()
+  if (m !== 'mock') {
+    try {
+      if (m === 'cloud') {
+        const up = await new Promise((resolve, reject) => {
+          wx.cloud.uploadFile({
+            cloudPath: 'audio/' + Date.now() + '_' + Math.floor(Math.random() * 1e6) + '.mp3',
+            filePath, success: resolve, fail: reject
+          })
+        })
+        const r = await callCloud('asr', { fileID: up.fileID })
+        if (r && r.text) return { text: r.text, source: 'cloud' }
+        throw new Error('asr 云函数返回空')
+      }
+      // direct：wx.uploadFile 天然支持 multipart
+      const r = await new Promise((resolve, reject) => {
+        wx.uploadFile({
+          url: config.baseUrl + '/audio/transcriptions',
+          filePath, name: 'file',
+          header: { Authorization: 'Bearer ' + config.apiKey },
+          formData: { model: 'whisper-1', language: 'zh' },
+          timeout: config.requestTimeoutMs,
+          success: res => { try { resolve(JSON.parse(res.data)) } catch (e) { reject(e) } },
+          fail: reject
+        })
+      })
+      if (r.text) return { text: String(r.text).trim(), source: 'direct' }
+      throw new Error('asr 响应异常')
+    } catch (e) {
+      console.warn('[api.transcribe] 失败:', e)
+    }
+  }
+  // 语音识别没有合理的假数据，mock 下返回空由页面提示
+  return { text: '', source: 'mock' }
+}
+
 // ---------- 证据整理：一键生成书面陈述草稿 ----------
 async function statement(evidenceList) {
   const digest = (evidenceList || []).map((e, i) =>
@@ -295,4 +333,4 @@ async function statement(evidenceList) {
   return { text: mockData.statementMock(evidenceList), source: 'mock' }
 }
 
-module.exports = { mode, detectCrisis, chat, legalQa, risk, vision, statement }
+module.exports = { mode, detectCrisis, chat, legalQa, risk, vision, statement, transcribe }

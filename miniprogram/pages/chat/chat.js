@@ -2,6 +2,7 @@
 const util = require('../../utils/util.js')
 const api = require('../../utils/api.js')
 const session = require('../../utils/session.js')
+const voice = require('../../utils/voice.js')
 
 const CHIPS = ['我不知道该怎么办', '他昨天又动手了', '我想离开但很害怕']
 
@@ -30,8 +31,20 @@ Page({
     chips: CHIPS,
     toView: '',
     showSessions: false,
-    sessions: []
+    sessions: [],
+    recing: false,
+    recHint: ''
   },
+
+  onLoad() {
+    // 语音输入：识别结果追加到输入框（用户可修改后再发送）
+    this.voice = voice.setup(this, text => {
+      this.setData({ inputValue: (this.data.inputValue || '') + text })
+    })
+  },
+
+  voiceStart() { this.voice.start() },
+  voiceStop() { if (this.data.recing) this.voice.stop() },
 
   onShow() {
     if (!util.ensureUnlocked()) return

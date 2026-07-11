@@ -1,6 +1,7 @@
 // 法律问答页（独立）：真 RAG 检索 + 来源引用
 const util = require('../../utils/util.js')
 const api = require('../../utils/api.js')
+const voice = require('../../utils/voice.js')
 
 const CHIPS = [
   '人身安全保护令怎么申请？',
@@ -16,8 +17,19 @@ Page({
     inputValue: '',
     aiTyping: false,
     agentStatus: '',
-    toView: ''
+    toView: '',
+    recing: false,
+    recHint: ''
   },
+
+  onLoad() {
+    this.voice = voice.setup(this, text => {
+      this.setData({ inputValue: (this.data.inputValue || '') + text })
+    })
+  },
+
+  voiceStart() { this.voice.start() },
+  voiceStop() { if (this.data.recing) this.voice.stop() },
 
   onShow() { util.ensureUnlocked() },
 

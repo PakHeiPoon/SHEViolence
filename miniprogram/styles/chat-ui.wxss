@@ -33,6 +33,20 @@
 .ph { color: var(--muted); }
 .icon-btn { width: 74rpx; height: 74rpx; flex-shrink: 0; border-radius: 50%; background: var(--surface-2); display: flex; align-items: center; justify-content: center; font-size: 38rpx; }
 .icon-btn.on { transform: scale(0.92); }
+.icon-btn.recing { background: var(--danger-soft); animation: recPulse 1s ease-in-out infinite; }
+@keyframes recPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
+
+/* 录音状态提示 */
+.rec-pill {
+  align-self: center;
+  margin: 0 auto 10rpx;
+  background: rgba(64, 55, 43, 0.86);
+  color: #FFF7EC;
+  font-size: 24rpx;
+  padding: 12rpx 32rpx;
+  border-radius: 999rpx;
+  width: fit-content;
+}
 .send { background: linear-gradient(135deg, var(--apricot), var(--apricot-deep)); color: #FFFDF7; font-size: 28rpx; font-weight: 700; padding: 16rpx 32rpx; border-radius: 999rpx; flex-shrink: 0; }
 .send.disabled { opacity: 0.5; }
 

@@ -67,8 +67,12 @@
     <view class="ip-tip">图片将发给暖暖看看</view>
   </view>
 
+  <!-- 录音提示 -->
+  <view class="rec-pill" wx:if="{{recHint}}">{{recHint}}</view>
+
   <!-- 输入条 -->
   <view class="input-bar">
+    <view class="icon-btn {{recing ? 'recing' : ''}}" bindtouchstart="voiceStart" bindtouchend="voiceStop" bindtouchcancel="voiceStop">🎤</view>
     <view class="icon-btn" hover-class="icon-btn on" bindtap="chooseImage">📷</view>
     <input class="input" value="{{inputValue}}" bindinput="onInput" confirm-type="send" bindconfirm="send"
       placeholder="想说什么都可以…" placeholder-class="ph" />
