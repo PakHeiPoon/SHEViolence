@@ -1,0 +1,63 @@
+// 云函数 vision · 伤情图片多模态分析（qwen3-vl-max）
+// 流程：前端 wx.cloud.uploadFile 传图 → 传 fileID 进来 → 下载转 base64 → 多模态分析
+const cloud = require('wx-server-sdk')
+const axios = require('axios')
+
+cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
+
+const BASE_URL = 'https://api.openai-next.com/v1'
+const MODEL = 'qwen3-vl-max'
+
+const VISION_SYSTEM = `你是协助家暴受害者做证据记录的专业记录员。请客观、克制、专业地描述照片中的伤情，用于事后就医和法律程序参考。
+只输出 JSON（不要任何多余文字、不要 markdown 代码块）：
+{"injury_desc":"伤情客观描述：部位、形态、大小估计、颜色、推测成因与大致时间","medical_tip":"就医与病历留档建议，一句话","suggest_police":"是否建议报警及理由，一句话","timeline":"归档建议，一句话"}
+注意：这是辅助记录，不是医疗诊断；描述避免夸大或猜测无法从图中得出的结论。`
+
+const MOCK = {
+  injury_desc: '（离线兜底）照片已收到。请尽量在光线充足处补拍近景与含面部的远景各一张，便于后续鉴定。',
+  medical_tip: '建议 48 小时内就医并请医生在病历中注明伤情与致伤原因。',
+  suggest_police: '如伤情明显，建议报警并要求伤情鉴定与出具告诫书。',
+  timeline: '建议与当日聊天记录、就诊票据一起按日期归档。'
+}
+
+function parseJsonLoose(s) {
+  const t = String(s || '').replace(/<think>[\s\S]*?<\/think>/g, '').replace(/```json|```/g, '')
+  const a = t.indexOf('{')
+  const b = t.lastIndexOf('}')
+  if (a === -1 || b === -1) return null
+  try { return JSON.parse(t.slice(a, b + 1)) } catch (e) { return null }
+}
+
+exports.main = async (event) => {
+  try {
+    if (!event.fileID) throw new Error('缺少 fileID')
+    const dl = await cloud.downloadFile({ fileID: event.fileID })
+    const b64 = dl.fileContent.toString('base64')
+
+    const res = await axios.post(BASE_URL + '/chat/completions', {
+      model: MODEL,
+      temperature: 0.2,
+      max_tokens: 600,
+      messages: [
+        { role: 'system', content: VISION_SYSTEM },
+        {
+          role: 'user',
+          content: [
+            { type: 'text', text: event.desc || '请分析这张照片中的伤情并按要求输出 JSON。' },
+            { type: 'image_url', image_url: { url: 'data:image/jpeg;base64,' + b64 } }
+          ]
+        }
+      ]
+    }, {
+      timeout: 15000,
+      headers: { Authorization: 'Bearer ' + process.env.OPENAI_NEXT_KEY }
+    })
+
+    const j = parseJsonLoose(res.data.choices[0].message.content)
+    if (j && j.injury_desc) return Object.assign({ source: 'cloud' }, j)
+    throw new Error('JSON 解析失败')
+  } catch (e) {
+    console.error('[vision] 降级 mock:', e.message)
+    return Object.assign({ source: 'cloud-mock' }, MOCK)
+  }
+}

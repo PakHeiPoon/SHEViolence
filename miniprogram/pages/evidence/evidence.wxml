@@ -1,0 +1,63 @@
+<view class="ev safe-bottom">
+
+  <view class="tip card fade-up">
+    <view class="tip-icon">🔐</view>
+    <view class="tip-text">
+      <view class="tip-title">按时间线保管你的证据</view>
+      <view class="tip-sub">上传伤情照片，AI 会生成可用于就医和法律程序的专业描述。演示版本地存储；正式版将端到端加密。</view>
+    </view>
+  </view>
+
+  <!-- 上传按钮 -->
+  <view class="add {{analyzing ? 'busy' : ''}}" bindtap="add">
+    <block wx:if="{{analyzing}}">
+      <view class="add-icon spin">⏳</view>
+      <view class="add-text">AI 正在分析伤情照片…</view>
+    </block>
+    <block wx:else>
+      <view class="add-icon">📷</view>
+      <view class="add-text">上传照片，生成专业伤情描述</view>
+    </block>
+  </view>
+
+  <!-- 分析结果确认卡 -->
+  <view class="draft card fade-up" wx:if="{{draft}}">
+    <view class="draft-head">
+      <image class="draft-img" src="{{draft.path}}" mode="aspectFill" />
+      <view class="draft-title">AI 分析完成，请确认</view>
+    </view>
+    <view class="d-row"><text class="d-label">伤情描述</text><text class="d-val">{{draft.ai.injury_desc}}</text></view>
+    <view class="d-row"><text class="d-label">就医建议</text><text class="d-val">{{draft.ai.medical_tip}}</text></view>
+    <view class="d-row"><text class="d-label">报警建议</text><text class="d-val">{{draft.ai.suggest_police}}</text></view>
+    <view class="d-row"><text class="d-label">归档建议</text><text class="d-val">{{draft.ai.timeline}}</text></view>
+    <view class="d-note">以上为 AI 辅助参考，非医疗诊断</view>
+    <view class="d-btns">
+      <button class="btn btn-ghost" bindtap="discardDraft">不保存</button>
+      <button class="btn btn-primary" bindtap="saveDraft">保存到时间线</button>
+    </view>
+  </view>
+
+  <!-- 时间线 -->
+  <view class="tl-title" wx:if="{{list.length}}">证据时间线</view>
+  <view class="tl">
+    <view class="item card" wx:for="{{list}}" wx:key="id">
+      <view class="item-head">
+        <view class="item-date">{{item.date}}</view>
+        <view class="tag tag-apricot">{{item.tag}}</view>
+        <view class="item-del" catchtap="del" data-id="{{item.id}}">删除</view>
+      </view>
+      <view class="item-title">{{item.title}}</view>
+      <image wx:if="{{item.path}}" class="item-img" src="{{item.path}}" mode="aspectFill" />
+      <view class="item-desc">{{item.desc}}</view>
+      <view class="item-extra" wx:if="{{item.medical}}">💊 {{item.medical}}</view>
+      <view class="item-extra" wx:if="{{item.police}}">🚔 {{item.police}}</view>
+    </view>
+  </view>
+
+  <view class="empty" wx:if="{{!list.length}}">
+    <view class="empty-emoji">🍃</view>
+    <view class="empty-text">还没有记录。需要的时候，这里会替你记住一切。</view>
+  </view>
+
+  <escape-btn />
+</view>

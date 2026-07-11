@@ -1,0 +1,60 @@
+<view class="mine safe-bottom">
+
+  <!-- 匿名身份 -->
+  <view class="id-card card fade-up">
+    <view class="avatar">🌤</view>
+    <view class="id-texts">
+      <view class="id-name">{{nickname}}</view>
+      <view class="id-sub">随机匿名身份 · 不关联任何真实信息</view>
+    </view>
+    <view class="id-regen" bindtap="regen">换一个</view>
+  </view>
+
+  <!-- 紧急联系人 -->
+  <view class="card sec fade-up delay-1">
+    <view class="sec-head">
+      <view class="sec-title">🫂 紧急联系人（{{contacts.length}}/3）</view>
+      <view class="sec-action" bindtap="toggleContactForm">{{showContactForm ? '收起' : '+ 添加'}}</view>
+    </view>
+    <view class="sec-sub">一键求助时可以快速拨打他们的电话</view>
+
+    <view class="c-form" wx:if="{{showContactForm}}">
+      <input class="c-input" placeholder="称呼（如：姐姐）" placeholder-class="ph" value="{{cName}}" bindinput="onCName" />
+      <input class="c-input" type="number" placeholder="电话号码" placeholder-class="ph" value="{{cTel}}" bindinput="onCTel" />
+      <button class="btn btn-primary c-save" bindtap="addContact">保存</button>
+    </view>
+
+    <view class="c-row" wx:for="{{contacts}}" wx:key="tel">
+      <view class="c-name">{{item.name}}</view>
+      <view class="c-tel">{{item.tel}}</view>
+      <view class="c-call" bindtap="callContact" data-tel="{{item.tel}}">拨打</view>
+      <view class="c-del" bindtap="delContact" data-idx="{{index}}">移除</view>
+    </view>
+    <view class="c-empty" wx:if="{{!contacts.length && !showContactForm}}">还没有添加联系人</view>
+  </view>
+
+  <!-- 隐私设置 -->
+  <view class="card sec fade-up delay-2">
+    <view class="sec-head">
+      <view class="sec-title">🎭 伪装与解锁</view>
+      <view class="sec-action" bindtap="togglePwdForm">{{showPwdForm ? '收起' : '修改密码'}}</view>
+    </view>
+    <view class="sec-sub">在记账本「金额」框输入解锁密码并确认，即可进入真实首页（默认 1234）</view>
+    <view class="c-form" wx:if="{{showPwdForm}}">
+      <input class="c-input" type="number" maxlength="8" password placeholder="新解锁密码（4-8 位数字）"
+        placeholder-class="ph" value="{{pwd}}" bindinput="onPwd" />
+      <button class="btn btn-primary c-save" bindtap="savePwd">保存新密码</button>
+    </view>
+  </view>
+
+  <!-- 数据与安全 -->
+  <view class="card sec fade-up delay-3">
+    <view class="sec-title">🛡️ 数据与安全</view>
+    <view class="sec-sub">证据与记录仅存在本机（演示版）；正式版将采用端到端加密云存储，服务器只保存密文。</view>
+    <button class="btn btn-danger clear-btn" bindtap="clearAll">一键清除全部数据</button>
+  </view>
+
+  <view class="about" bindtap="about">关于「港湾」与免责声明</view>
+
+  <escape-btn />
+</view>

@@ -1,0 +1,70 @@
+.mine { padding: 28rpx; }
+
+/* 身份卡 */
+.id-card { display: flex; align-items: center; gap: 24rpx; padding: 36rpx 32rpx; }
+.avatar {
+  width: 104rpx;
+  height: 104rpx;
+  border-radius: 50%;
+  background: var(--apricot-soft);
+  font-size: 52rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.id-texts { flex: 1; }
+.id-name { font-size: 36rpx; font-weight: 800; }
+.id-sub { font-size: 22rpx; color: var(--muted); margin-top: 6rpx; }
+.id-regen {
+  font-size: 24rpx;
+  color: var(--apricot-deep);
+  border: 2rpx solid var(--apricot);
+  border-radius: 999rpx;
+  padding: 10rpx 26rpx;
+  font-weight: 600;
+}
+
+/* 通用小节 */
+.sec { margin-top: 22rpx; padding: 28rpx; }
+.sec-head { display: flex; align-items: center; justify-content: space-between; }
+.sec-title { font-size: 29rpx; font-weight: 700; }
+.sec-action { font-size: 25rpx; color: var(--apricot-deep); font-weight: 600; }
+.sec-sub { font-size: 23rpx; color: var(--muted); margin-top: 8rpx; line-height: 1.7; }
+
+/* 表单 */
+.c-form { margin-top: 20rpx; display: flex; flex-direction: column; gap: 16rpx; }
+.c-input {
+  background: var(--surface-2);
+  border-radius: 16rpx;
+  padding: 18rpx 24rpx;
+  font-size: 28rpx;
+}
+.ph { color: var(--muted); }
+.c-save { font-size: 27rpx; padding: 14rpx 0; }
+
+/* 联系人行 */
+.c-row {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  padding: 20rpx 0;
+  border-bottom: 1rpx dashed var(--border);
+}
+.c-row:last-child { border-bottom: none; }
+.c-name { font-size: 28rpx; font-weight: 700; }
+.c-tel { font-size: 24rpx; color: var(--muted); flex: 1; }
+.c-call {
+  font-size: 23rpx;
+  background: var(--sage);
+  color: #F4FAF4;
+  border-radius: 999rpx;
+  padding: 8rpx 24rpx;
+  font-weight: 600;
+}
+.c-del { font-size: 23rpx; color: var(--muted); }
+.c-empty { font-size: 24rpx; color: var(--muted); text-align: center; padding: 24rpx 0 8rpx; }
+
+/* 清除 */
+.clear-btn { margin-top: 24rpx; width: 100%; font-size: 28rpx; }
+
+.about { text-align: center; font-size: 24rpx; color: var(--muted); padding: 40rpx 0 20rpx; text-decoration: underline; }

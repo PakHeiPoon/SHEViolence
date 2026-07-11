@@ -1,0 +1,93 @@
+/**
+ * 设计系统 ·「一间有阳光的屋子」
+ * 解锁后的真实世界：暖纸色底 + 杏橙主色 + 鼠尾草绿（安全/出口专用色）
+ * 伪装页刻意不用这套（用冷灰蓝记账风），解锁瞬间形成强反差。
+ */
+page {
+  --bg: #FBF6ED;            /* 暖纸色背景 */
+  --surface: #FFFDF7;       /* 卡片面 */
+  --surface-2: #F6EEDD;     /* 次级面 */
+  --border: #EFE3CC;
+  --text: #40372B;
+  --muted: #97896F;
+  --apricot: #E08A4E;       /* 杏橙 · 主行动色 */
+  --apricot-deep: #C9722F;
+  --apricot-soft: #FAE8D5;
+  --sage: #4E7C5B;          /* 鼠尾草绿 · 安全/出口 */
+  --sage-soft: #E3EEE2;
+  --danger: #C2503C;        /* 仅用于危机/求助 */
+  --danger-soft: #F9E4DC;
+  --shadow: 0 6rpx 24rpx rgba(180, 120, 60, 0.10);
+
+  background: var(--bg);
+  color: var(--text);
+  font-size: 30rpx;
+  line-height: 1.65;
+  font-family: -apple-system, "PingFang SC", "Hiragino Sans GB", sans-serif;
+}
+
+/* ---------- 通用卡片 ---------- */
+.card {
+  background: var(--surface);
+  border: 1rpx solid var(--border);
+  border-radius: 32rpx;
+  box-shadow: var(--shadow);
+  padding: 32rpx;
+  box-sizing: border-box;
+}
+
+.h1 { font-size: 40rpx; font-weight: 700; letter-spacing: 1rpx; }
+.h2 { font-size: 34rpx; font-weight: 700; }
+.muted { color: var(--muted); font-size: 26rpx; }
+
+/* ---------- 按钮 ---------- */
+.btn {
+  border-radius: 999rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  padding: 20rpx 40rpx;
+  line-height: 1.4;
+  border: none;
+}
+.btn::after { border: none; }
+.btn-primary { background: linear-gradient(135deg, var(--apricot), var(--apricot-deep)); color: #FFFDF7; }
+.btn-ghost { background: var(--surface); color: var(--apricot-deep); border: 2rpx solid var(--apricot); }
+.btn-sage { background: var(--sage); color: #F4FAF4; }
+.btn-danger { background: var(--danger); color: #FFF6F2; }
+
+/* ---------- 标签 ---------- */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  font-size: 22rpx;
+  font-weight: 600;
+  padding: 4rpx 18rpx;
+  border-radius: 999rpx;
+  background: var(--surface-2);
+  color: var(--muted);
+}
+.tag-sage { background: var(--sage-soft); color: var(--sage); }
+.tag-apricot { background: var(--apricot-soft); color: var(--apricot-deep); }
+.tag-danger { background: var(--danger-soft); color: var(--danger); }
+
+/* ---------- 进场动画：走进一间暖屋子 ---------- */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28rpx); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fadeUp 0.5s ease both; }
+.delay-1 { animation-delay: 0.06s; }
+.delay-2 { animation-delay: 0.14s; }
+.delay-3 { animation-delay: 0.22s; }
+.delay-4 { animation-delay: 0.30s; }
+.delay-5 { animation-delay: 0.38s; }
+
+/* SOS 按钮呼吸 */
+@keyframes breathe {
+  0%, 100% { transform: scale(1); box-shadow: 0 10rpx 30rpx rgba(194, 80, 60, 0.18); }
+  50% { transform: scale(1.015); box-shadow: 0 14rpx 44rpx rgba(194, 80, 60, 0.28); }
+}
+.breathe { animation: breathe 2.6s ease-in-out infinite; }
+
+/* 页面底部安全区留白（悬浮按钮/输入条不遮内容） */
+.safe-bottom { padding-bottom: calc(160rpx + env(safe-area-inset-bottom)); }

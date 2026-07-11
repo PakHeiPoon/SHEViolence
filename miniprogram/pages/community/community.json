@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "互助社群",
+  "usingComponents": {
+    "escape-btn": "/components/escape-btn/escape-btn"
+  }
+}

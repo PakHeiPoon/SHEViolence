@@ -1,0 +1,14 @@
+# 依赖
+node_modules/
+
+# 密钥配置（绝不提交！队友请复制对应 example 文件后自行填写）
+miniprogram/config/config.js
+rag/config.local.js
+.env
+.env.*
+
+# 系统
+.DS_Store
+
+# 开发者工具本地配置
+project.private.config.json

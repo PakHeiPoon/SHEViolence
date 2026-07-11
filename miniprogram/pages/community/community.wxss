@@ -1,0 +1,69 @@
+.comm { padding: 24rpx 28rpx 0; }
+
+.head-note {
+  font-size: 22rpx;
+  color: var(--muted);
+  background: var(--sage-soft);
+  border-radius: 16rpx;
+  padding: 16rpx 22rpx;
+  line-height: 1.6;
+}
+
+/* 标签 */
+.tags { white-space: nowrap; margin-top: 20rpx; }
+.tag-item {
+  display: inline-block;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1rpx solid var(--border);
+  border-radius: 999rpx;
+  padding: 12rpx 32rpx;
+  margin-right: 16rpx;
+}
+.tag-item.on { background: var(--apricot-soft); color: var(--apricot-deep); border-color: var(--apricot); }
+
+/* 帖子 */
+.posts { margin-top: 20rpx; display: flex; flex-direction: column; gap: 20rpx; }
+.post { padding: 26rpx 28rpx; }
+.post-top { display: flex; align-items: center; gap: 16rpx; }
+.post-time { font-size: 22rpx; color: var(--muted); }
+.post-report { margin-left: auto; font-size: 22rpx; color: var(--muted); }
+.post-title { font-size: 30rpx; font-weight: 700; margin-top: 14rpx; line-height: 1.6; }
+.post-content { font-size: 26rpx; color: var(--text); margin-top: 8rpx; line-height: 1.7; }
+.post-meta { font-size: 22rpx; color: var(--muted); margin-top: 14rpx; }
+
+/* 回复 */
+.replies { margin-top: 18rpx; border-top: 1rpx dashed var(--border); padding-top: 6rpx; }
+.reply { padding: 16rpx 0; border-bottom: 1rpx solid rgba(239, 227, 204, 0.5); }
+.reply:last-child { border-bottom: none; }
+.reply-head { display: flex; align-items: center; gap: 12rpx; }
+.reply-name { font-size: 25rpx; font-weight: 700; color: var(--sage); }
+.cert {
+  font-size: 20rpx;
+  background: var(--sage);
+  color: #F4FAF4;
+  border-radius: 999rpx;
+  padding: 2rpx 14rpx;
+  font-weight: 600;
+}
+.reply-content { font-size: 25rpx; line-height: 1.7; margin-top: 8rpx; color: var(--text); }
+
+/* 发帖浮钮 */
+.fab {
+  position: fixed;
+  right: 28rpx;
+  bottom: calc(320rpx + env(safe-area-inset-bottom));
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--apricot), var(--apricot-deep));
+  color: #fff;
+  font-size: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 24rpx rgba(201, 114, 47, 0.35);
+  z-index: 998;
+}

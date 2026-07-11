@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "倾诉小屋",
+  "usingComponents": {
+    "escape-btn": "/components/escape-btn/escape-btn"
+  }
+}

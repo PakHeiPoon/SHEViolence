@@ -1,0 +1,22 @@
+.esc {
+  position: fixed;
+  right: 28rpx;
+  bottom: calc(180rpx + env(safe-area-inset-bottom));
+  width: 108rpx;
+  height: 108rpx;
+  border-radius: 50%;
+  background: #4E7C5B; /* 鼠尾草绿 = 安全出口 */
+  color: #F4FAF4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 2rpx;
+  box-shadow: 0 8rpx 24rpx rgba(78, 124, 91, 0.35);
+  opacity: 0.94;
+  z-index: 999;
+}
+.esc-hover { transform: scale(0.94); opacity: 1; }

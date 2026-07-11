@@ -1,0 +1,64 @@
+<view class="home safe-bottom">
+
+  <!-- 阳光问候 -->
+  <view class="greet card fade-up">
+    <view class="greet-sun"></view>
+    <view class="greet-hi">你好，{{nickname}}</view>
+    <view class="greet-sub">今天也要好好照顾自己 🌿</view>
+    <view class="greet-date">{{today}} · 这里只有你自己能看到</view>
+  </view>
+
+  <!-- 一键求助 -->
+  <view class="sos breathe fade-up delay-1" hover-class="sos-hover" bindtap="sosTap" bindlongpress="sosLong">
+    <view class="sos-icon">🆘</view>
+    <view class="sos-main">
+      <view class="sos-title">一键求助</view>
+      <view class="sos-sub">轻触选择求助方式 · 长按直接拨打 110</view>
+    </view>
+  </view>
+
+  <!-- 功能入口 -->
+  <view class="grid fade-up delay-2">
+    <view class="cell" hover-class="cell-hover" bindtap="goChat">
+      <view class="cell-icon bg-apricot">💬</view>
+      <view class="cell-name">AI 倾诉</view>
+      <view class="cell-desc">暖暖在，随时听</view>
+    </view>
+    <view class="cell" hover-class="cell-hover" bindtap="goRisk">
+      <view class="cell-icon bg-sage">📋</view>
+      <view class="cell-name">安全自查</view>
+      <view class="cell-desc">3 分钟评估处境</view>
+    </view>
+    <view class="cell" hover-class="cell-hover" bindtap="goEvidence">
+      <view class="cell-icon bg-apricot">📁</view>
+      <view class="cell-name">我的记录</view>
+      <view class="cell-desc">证据整理与保管</view>
+    </view>
+    <view class="cell" hover-class="cell-hover" bindtap="goCommunity">
+      <view class="cell-icon bg-sage">👥</view>
+      <view class="cell-name">互助社群</view>
+      <view class="cell-desc">你不是一个人</view>
+    </view>
+  </view>
+
+  <!-- 科普信息流 -->
+  <view class="section-title fade-up delay-3">了解，是保护自己的第一步</view>
+  <view class="feed">
+    <view class="k-card card fade-up delay-{{index < 2 ? index + 4 : 5}}" wx:for="{{knowledge}}" wx:key="id"
+      bindtap="toggleCard" data-id="{{item.id}}">
+      <view class="k-head">
+        <view class="k-icon">{{item.icon}}</view>
+        <view class="k-texts">
+          <view class="k-title">{{item.title}}</view>
+          <view class="k-brief">{{item.brief}}</view>
+        </view>
+        <view class="k-chevron {{expandedId === item.id ? 'open' : ''}}">›</view>
+      </view>
+      <view class="k-body" wx:if="{{expandedId === item.id}}">
+        <view class="k-p" wx:for="{{item.body}}" wx:for-item="p" wx:key="*this">{{p}}</view>
+      </view>
+    </view>
+  </view>
+
+  <escape-btn />
+</view>

@@ -1,0 +1,70 @@
+<view class="risk safe-bottom">
+
+  <!-- 结果视图 -->
+  <block wx:if="{{result}}">
+    <view class="res card fade-up lv-{{result.level}}">
+      <view class="res-label">评估结果</view>
+      <view class="res-level">{{result.levelText}}</view>
+      <view class="res-score">量表得分 {{result.score}} / {{result.maxScore}}</view>
+    </view>
+
+    <view class="card fade-up delay-1 sec" wx:if="{{result.aiAnalysis}}">
+      <view class="sec-title">🧠 AI 分析</view>
+      <view class="sec-body">{{result.aiAnalysis}}</view>
+    </view>
+
+    <view class="card fade-up delay-2 sec">
+      <view class="sec-title">✅ 给你的行动建议</view>
+      <view class="sug" wx:for="{{result.suggestions}}" wx:key="*this">
+        <view class="sug-idx">{{index + 1}}</view>
+        <view class="sug-text">{{item}}</view>
+      </view>
+    </view>
+
+    <view class="card fade-up delay-3 sec">
+      <view class="sec-title">📞 随时可以拨打</view>
+      <view class="res-line" wx:for="{{result.resources}}" wx:key="tel" bindtap="call" data-tel="{{item.tel}}">
+        <view>
+          <view class="res-name">{{item.name}}</view>
+          <view class="res-desc">{{item.desc}}</view>
+        </view>
+        <view class="res-call">拨打</view>
+      </view>
+    </view>
+
+    <view class="foot-note">结果仅供参考，不构成专业评估。你的感受永远是最重要的依据。</view>
+    <view class="btn-row">
+      <button class="btn btn-ghost" bindtap="reset">重新评估</button>
+      <button class="btn btn-primary" bindtap="goChat">和暖暖聊聊</button>
+    </view>
+  </block>
+
+  <!-- 引导视图 -->
+  <block wx:elif="{{!started}}">
+    <view class="intro card fade-up">
+      <view class="intro-emoji">📋</view>
+      <view class="intro-title">3 分钟，认真看看自己的处境</view>
+      <view class="intro-sub">10 道题，改编自国际通用的危险评估量表（Danger Assessment）。没有对错，请按真实情况选择——这里只有你自己能看到。</view>
+      <button class="btn btn-primary intro-btn" bindtap="start">开始自查</button>
+    </view>
+  </block>
+
+  <!-- 答题视图 -->
+  <block wx:else>
+    <view class="progress">已完成 {{answeredCount}} / {{questions.length}}</view>
+    <view class="q card" wx:for="{{questions}}" wx:key="id" wx:for-item="q" wx:for-index="qi">
+      <view class="q-text">{{qi + 1}}. {{q.text}}</view>
+      <view class="opts">
+        <view class="opt {{answers[q.id] === oi ? 'sel' : ''}}"
+          wx:for="{{q.options}}" wx:for-item="opt" wx:for-index="oi" wx:key="label"
+          bindtap="pick" data-qid="{{q.id}}" data-idx="{{oi}}">{{opt.label}}</view>
+      </view>
+    </view>
+    <button class="btn btn-primary submit {{answeredCount < questions.length ? 'dim' : ''}}"
+      bindtap="submit" loading="{{submitting}}">
+      {{submitting ? 'AI 正在分析…' : '查看评估结果'}}
+    </button>
+  </block>
+
+  <escape-btn />
+</view>
