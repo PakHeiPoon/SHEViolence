@@ -8,7 +8,7 @@
 1. **让管理员（donghao）把你加为项目成员**
    mp.weixin.qq.com → 管理 → 成员管理 → 项目成员 → 添加你的微信号，权限勾「开发者」
 2. **装工具**：微信开发者工具 + Node.js 18+
-3. **拉代码**：`git clone <仓库地址>`
+3. **拉代码**：`git clone https://github.com/PakHeiPoon/SHEViolence.git`
 4. **建本地配置**（不含密钥，放心）：
    ```bash
    cp miniprogram/config/config.example.js miniprogram/config/config.js

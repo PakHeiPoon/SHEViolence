@@ -7,6 +7,14 @@ const CHIPS = {
   legal: ['人身安全保护令怎么申请？', '只有辱骂没动手算家暴吗？', '离婚时家暴证据怎么认定？']
 }
 
+// 结论卡片：AI 回复里出现 ≥2 个可执行行动信号时，生成一张可操作卡片
+const ACTION_HINTS = ['报警', '110', '12338', '保护令', '证据', '取证', '离开', '庇护', '验伤', '伤情', '告诫书', '申请', '记录']
+function detectCard(reply) {
+  const hits = ACTION_HINTS.filter(w => reply.indexOf(w) > -1)
+  if (hits.length < 2) return null
+  return { summary: reply.length > 64 ? reply.slice(0, 62) + '…' : reply, saved: false }
+}
+
 Page({
   data: {
     mode: 'companion',           // companion | legal
@@ -67,7 +75,7 @@ Page({
         msg = { role: 'assistant', content: r.answer, sources: r.sources }
       } else {
         const r = await api.chat(messages)
-        msg = { role: 'assistant', content: r.reply }
+        msg = { role: 'assistant', content: r.reply, card: detectCard(r.reply) }
       }
       this.setData({
         messages: this.data.messages.concat([msg]),
@@ -86,5 +94,37 @@ Page({
 
   call110() { wx.makePhoneCall({ phoneNumber: '110' }) },
   call12338() { wx.makePhoneCall({ phoneNumber: '12338' }) },
-  closeBanner() { this.setData({ crisisLevel: 0 }) }
+  closeBanner() { this.setData({ crisisLevel: 0 }) },
+
+  // 结论卡片 → 存到「我的记录」（证据库）
+  saveCardToEvidence(e) {
+    const idx = Number(e.currentTarget.dataset.idx)
+    const msg = this.data.messages[idx]
+    if (!msg || !msg.card || msg.card.saved) return
+    const list = wx.getStorageSync('evidence_list') || []
+    const item = {
+      id: 'adv' + idx + '_' + list.length,
+      type: 'text',
+      date: util.todayStr(),
+      title: '💡 暖暖的建议',
+      desc: msg.content,
+      tag: '建议'
+    }
+    wx.setStorageSync('evidence_list', [item].concat(list))
+    const messages = this.data.messages.map((m, i) =>
+      i === idx ? Object.assign({}, m, { card: Object.assign({}, m.card, { saved: true }) }) : m
+    )
+    this.setData({ messages })
+    wx.showToast({ title: '已存到「我的记录」', icon: 'success' })
+  },
+
+  // 结论卡片 → 一键求助
+  sosFromCard() {
+    wx.showActionSheet({
+      itemList: ['拨打 110（报警）', '拨打 12338（妇女维权热线）'],
+      success: res => {
+        wx.makePhoneCall({ phoneNumber: res.tapIndex === 0 ? '110' : '12338' })
+      }
+    })
+  }
 })

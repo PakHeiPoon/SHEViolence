@@ -42,6 +42,16 @@
           </view>
         </view>
       </view>
+      <view class="card-row" wx:if="{{item.card}}">
+        <view class="concl-card">
+          <view class="cc-head">💡 一条可以行动的建议</view>
+          <view class="cc-body">{{item.card.summary}}</view>
+          <view class="cc-actions">
+            <view class="cc-btn {{item.card.saved ? 'done' : ''}}" catchtap="saveCardToEvidence" data-idx="{{index}}">{{item.card.saved ? '✓ 已存到我的记录' : '＋ 存到我的记录'}}</view>
+            <view class="cc-btn cc-sos" catchtap="sosFromCard">一键求助</view>
+          </view>
+        </view>
+      </view>
     </block>
 
     <view class="row left" wx:if="{{aiTyping}}">
