@@ -176,6 +176,7 @@ async function legalQa(question) {
     try {
       if (m === 'cloud') {
         const r = await callCloud('rag', { question })
+        console.log('[rag云函数]', r && r.v ? r.v : '⚠️旧版本(未带版本号=部署未生效)', '| source:', r && r.source, r && r.err ? ('| err: ' + r.err) : '', '| 命中:', (r && r.sources ? r.sources.length : 0) + '条')
         return { answer: r.answer, sources: r.sources || [], source: 'cloud' }
       }
       const r = await rqRag('/api/legal-qa', { question })

@@ -5,7 +5,8 @@ const path = require('path')
 const axios = require('axios')
 
 const BASE_URL = 'https://api.openai-next.com/v1'
-const GEN_MODELS = ['claude-opus-4-8', 'claude-sonnet-5'] // 主 opus，饱和自动降级
+const GEN_MODELS = ['deepseek-v3', 'claude-sonnet-5'] // RAG生成靠检索质量,用快模型:deepseek中文法律快又准,sonnet兜底(opus太慢撞超时)
+const VERSION = 'rag-v2-fast'
 const EMB_MODEL = 'text-embedding-3-small'
 const TOP_K = 4
 const MIN_SCORE = 0.25
@@ -72,7 +73,7 @@ async function api(pathName, body, timeout) {
 async function retrieve(question) {
   let scored
   try {
-    const emb = await api('/embeddings', { model: EMB_MODEL, input: [question], dimensions: 256 })
+    const emb = await api('/embeddings', { model: EMB_MODEL, input: [question], dimensions: 256 }, 8000)
     const qv = emb.data[0].embedding
     scored = index.chunks.map(c => ({ c, score: cosine(qv, c.vec) }))
   } catch (e) {
@@ -111,7 +112,7 @@ exports.main = async (event) => {
             { role: 'system', content: RAG_SYSTEM },
             { role: 'user', content: `【资料】\n${materials || '（未检索到相关资料）'}\n\n【用户问题】${question}` }
           ]
-        }, 15000)
+        }, 13000)
         answer = String(data.choices[0].message.content || '').replace(/<think>[\s\S]*?<\/think>/g, '').trim()
         if (answer) break
       } catch (e) {
@@ -128,10 +129,10 @@ exports.main = async (event) => {
         ref: 'W' + (i + 1), type: 'web', source: w.title, url: w.url,
         excerpt: w.content.slice(0, 60) + '…'
       }))),
-      source: 'cloud'
+      source: 'cloud', v: VERSION
     }
   } catch (e) {
     console.error('[rag] 降级 mock:', e.message)
-    return { answer: MOCK_ANSWER, sources: [], source: 'cloud-mock' }
+    return { answer: MOCK_ANSWER, sources: [], source: 'cloud-mock', v: VERSION, err: String(e.message || e).slice(0, 300) }
   }
 }
