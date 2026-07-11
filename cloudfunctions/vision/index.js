@@ -32,8 +32,20 @@ function parseJsonLoose(s) {
 exports.main = async (event) => {
   try {
     if (!event.fileID) throw new Error('缺少 fileID')
-    const dl = await cloud.downloadFile({ fileID: event.fileID })
-    const b64 = dl.fileContent.toString('base64')
+    // 首选临时URL直链（免云函数上传大包超时）；失败再降级 base64
+    let imageUrlPart = null
+    try {
+      const t = await cloud.getTempFileURL({ fileList: [event.fileID] })
+      const u = (t.fileList && t.fileList[0] && t.fileList[0].tempFileURL) || ''
+      if (u) imageUrlPart = { type: 'image_url', image_url: { url: u } }
+    } catch (e) {
+      console.warn('[vision] 取临时URL失败:', e.message)
+    }
+    if (!imageUrlPart) {
+      const dl = await cloud.downloadFile({ fileID: event.fileID })
+      const b64 = dl.fileContent.toString('base64')
+      imageUrlPart = { type: 'image_url', image_url: { url: 'data:image/jpeg;base64,' + b64 } }
+    }
 
     for (const model of MODELS) {
       try {
@@ -47,7 +59,7 @@ exports.main = async (event) => {
               role: 'user',
               content: [
                 { type: 'text', text: event.desc || '请分析这张照片中的伤情并按要求输出 JSON。' },
-                { type: 'image_url', image_url: { url: 'data:image/jpeg;base64,' + b64 } }
+                imageUrlPart
               ]
             }
           ]
