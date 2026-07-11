@@ -52,4 +52,26 @@ const evidencePreset = [
   }
 ]
 
-module.exports = { chatReplies, crisisReply, visionChatReply, pickChatReply, legalMock, riskAnalysisMock, visionMock, evidencePreset }
+function statementMock(list) {
+  const items = (list || []).map((e, i) => `  ${i + 1}. ${e.date || '日期不详'}　${e.title || '记录'}：${e.desc || ''}`).join('\n')
+  return `家庭暴力情况书面陈述（示例）
+
+一、基本情况
+我与对方系家庭成员关系。现就遭受家庭暴力的情况陈述如下。
+
+二、事实经过
+${items || '（暂无记录）'}
+
+三、证据清单
+上述记录及相应照片、病历等材料共 ${(list || []).length} 项，可供查验。
+
+四、诉求
+请求依法出具告诫书，支持我申请人身安全保护令，并依法追究施暴者责任。
+
+陈述人：＿＿＿＿
+日期：＿＿＿＿
+
+（离线示例，接入 AI 后将根据你的证据自动生成规范陈述）`
+}
+
+module.exports = { chatReplies, crisisReply, visionChatReply, pickChatReply, legalMock, riskAnalysisMock, visionMock, evidencePreset, statementMock }

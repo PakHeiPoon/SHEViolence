@@ -38,7 +38,10 @@
   </view>
 
   <!-- 时间线 -->
-  <view class="tl-title" wx:if="{{list.length}}">证据时间线</view>
+  <view class="tl-head" wx:if="{{list.length}}">
+    <view class="tl-title">证据时间线</view>
+    <view class="gen-btn {{statementGen ? 'busy' : ''}}" bindtap="genStatement">{{statementGen ? '⏳ 生成中…' : '📝 生成书面陈述'}}</view>
+  </view>
   <view class="tl">
     <view class="item card" wx:for="{{list}}" wx:key="id">
       <view class="item-head">
@@ -57,6 +60,23 @@
   <view class="empty" wx:if="{{!list.length}}">
     <view class="empty-emoji">🍃</view>
     <view class="empty-text">还没有记录。需要的时候，这里会替你记住一切。</view>
+  </view>
+
+  <!-- 书面陈述草稿 -->
+  <view class="stmt-mask" wx:if="{{statement}}" catchtap="closeStatement"></view>
+  <view class="stmt-panel" wx:if="{{statement}}">
+    <view class="stmt-head">
+      <text>AI 生成 · 书面陈述草稿</text>
+      <view class="stmt-close" catchtap="closeStatement">✕</view>
+    </view>
+    <scroll-view class="stmt-body" scroll-y>
+      <text user-select>{{statement}}</text>
+    </scroll-view>
+    <view class="stmt-note">仅供参考，请核对信息后使用；建议同时咨询律师或拨打 12338</view>
+    <view class="stmt-actions">
+      <button class="btn btn-ghost" catchtap="closeStatement">关闭</button>
+      <button class="btn btn-primary" catchtap="copyStatement">复制全文</button>
+    </view>
   </view>
 
   <escape-btn />

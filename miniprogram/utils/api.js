@@ -266,4 +266,32 @@ async function vision(filePath, desc) {
   return Object.assign({ source: 'mock' }, mockData.visionMock)
 }
 
-module.exports = { mode, detectCrisis, chat, legalQa, risk, vision }
+// ---------- 证据整理：一键生成书面陈述草稿 ----------
+async function statement(evidenceList) {
+  const digest = (evidenceList || []).map((e, i) =>
+    `${i + 1}. [${e.date || '日期不详'}] ${e.title || '记录'}：${e.desc || ''}${e.medical ? '（就医：' + e.medical + '）' : ''}`
+  ).join('\n')
+  const m = mode()
+  if (m !== 'mock') {
+    try {
+      if (m === 'cloud') {
+        const r = await callCloud('statement', { digest })
+        return { text: r.text, source: 'cloud' }
+      }
+      const data = await rq('/chat/completions', {
+        model: config.models.chat, temperature: 0.3, max_tokens: 1200,
+        messages: [
+          { role: 'system', content: prompts.STATEMENT_SYSTEM },
+          { role: 'user', content: '【证据记录】\n' + (digest || '（暂无记录）') }
+        ]
+      })
+      return { text: stripThink(data.choices[0].message.content), source: 'direct' }
+    } catch (e) {
+      console.warn('[api.statement] 降级 mock:', e)
+    }
+  }
+  await sleep(1200)
+  return { text: mockData.statementMock(evidenceList), source: 'mock' }
+}
+
+module.exports = { mode, detectCrisis, chat, legalQa, risk, vision, statement }

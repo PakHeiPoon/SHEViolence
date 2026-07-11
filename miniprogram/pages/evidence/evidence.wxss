@@ -37,7 +37,25 @@
 .d-btns .btn { flex: 1; font-size: 27rpx; padding: 16rpx 0; }
 
 /* 时间线 */
-.tl-title { font-size: 30rpx; font-weight: 700; margin: 36rpx 4rpx 16rpx; }
+.tl-head { display: flex; align-items: center; justify-content: space-between; margin: 36rpx 4rpx 16rpx; }
+.tl-title { font-size: 30rpx; font-weight: 700; }
+.gen-btn { font-size: 24rpx; font-weight: 600; color: #FFFDF7; background: linear-gradient(135deg, var(--apricot), var(--apricot-deep)); padding: 12rpx 24rpx; border-radius: 999rpx; }
+.gen-btn.busy { opacity: 0.7; }
+
+/* 书面陈述模态 */
+.stmt-mask { position: fixed; inset: 0; background: rgba(40, 30, 20, 0.45); z-index: 950; }
+.stmt-panel {
+  position: fixed; left: 24rpx; right: 24rpx; bottom: 0; top: 120rpx;
+  background: var(--surface); border-radius: 32rpx 32rpx 0 0; z-index: 951;
+  display: flex; flex-direction: column;
+  box-shadow: 0 -8rpx 40rpx rgba(0,0,0,0.18);
+}
+.stmt-head { display: flex; align-items: center; justify-content: space-between; padding: 28rpx 30rpx 16rpx; font-size: 30rpx; font-weight: 800; border-bottom: 1rpx solid var(--border); }
+.stmt-close { color: var(--muted); font-size: 32rpx; padding: 0 8rpx; }
+.stmt-body { flex: 1; padding: 24rpx 30rpx; font-size: 27rpx; line-height: 1.85; color: var(--text); white-space: pre-wrap; }
+.stmt-note { font-size: 21rpx; color: var(--muted); padding: 12rpx 30rpx; text-align: center; }
+.stmt-actions { display: flex; gap: 18rpx; padding: 16rpx 30rpx calc(24rpx + env(safe-area-inset-bottom)); }
+.stmt-actions .btn { flex: 1; }
 .tl { display: flex; flex-direction: column; gap: 20rpx; }
 .item { padding: 26rpx 28rpx; }
 .item-head { display: flex; align-items: center; gap: 16rpx; }

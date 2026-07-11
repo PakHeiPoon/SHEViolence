@@ -8,7 +8,9 @@ Page({
   data: {
     list: [],
     analyzing: false,
-    draft: null // 待确认的分析结果 { path, ai: {injury_desc, medical_tip, suggest_police, timeline} }
+    draft: null, // 待确认的分析结果 { path, ai: {injury_desc, medical_tip, suggest_police, timeline} }
+    statement: '',
+    statementGen: false
   },
 
   onShow() {
@@ -71,5 +73,25 @@ Page({
         this.setData({ list })
       }
     })
-  }
+  },
+
+  // 一键生成书面陈述草稿（证据整理 Agent）
+  async genStatement() {
+    if (this.data.statementGen) return
+    if (!this.data.list.length) { wx.showToast({ title: '先添加一些记录', icon: 'none' }); return }
+    this.setData({ statementGen: true })
+    try {
+      const r = await api.statement(this.data.list)
+      this.setData({ statementGen: false, statement: r.text })
+    } catch (e) {
+      this.setData({ statementGen: false })
+      wx.showToast({ title: '生成失败，请重试', icon: 'none' })
+    }
+  },
+
+  copyStatement() {
+    wx.setClipboardData({ data: this.data.statement, success: () => wx.showToast({ title: '已复制到剪贴板' }) })
+  },
+
+  closeStatement() { this.setData({ statement: '' }) }
 })
