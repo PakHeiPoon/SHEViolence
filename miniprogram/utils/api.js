@@ -327,7 +327,7 @@ async function statement(evidenceList) {
         throw new Error('statement 云函数未就绪，降级本地草稿')
       }
       const data = await rq('/chat/completions', {
-        model: config.models.chat, temperature: 0.3, max_tokens: 1200,
+        model: config.models.statement || config.models.chat, temperature: 0.3, max_tokens: 1200,
         messages: [
           { role: 'system', content: prompts.STATEMENT_SYSTEM },
           { role: 'user', content: '【证据记录】\n' + (digest || '（暂无记录）') }

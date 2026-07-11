@@ -5,7 +5,7 @@ const path = require('path')
 const axios = require('axios')
 
 const BASE_URL = 'https://api.openai-next.com/v1'
-const GEN_MODEL = 'deepseek-v3'
+const GEN_MODEL = 'claude-sonnet-5' // 引用纪律更好；deepseek-v3 备选
 const EMB_MODEL = 'text-embedding-3-small'
 const TOP_K = 4
 const MIN_SCORE = 0.25
@@ -14,7 +14,7 @@ const RAG_SYSTEM = `你是反家暴法律援助助手。请仅依据我提供的
 - 引用资料时标注编号，如「根据资料[1]」；
 - 资料里没有的内容明确说"资料中未提及"，并建议拨打12338咨询，绝不编造；
 - 用通俗中文回答，条理清晰，不超过250字；先给结论，再给步骤；
-- 纯文本输出，禁止 markdown 符号（**、#、-列表等），分点用 1. 2. 3.。`
+- 纯文本输出，禁止 markdown 符号（**、#、-列表等），分点用 1. 2. 3.；始终使用简体中文。`
 
 let index = null
 try {

@@ -6,12 +6,12 @@ const axios = require('axios')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 
 const BASE_URL = 'https://api.openai-next.com/v1'
-const MODEL = 'qwen3-vl-max'
+const MODEL = 'claude-sonnet-5' // qwen3-vl-max 平台通道已挂；sonnet-5 实测看图 4s 准确
 
 const VISION_SYSTEM = `你是协助家暴受害者做证据记录的专业记录员。请客观、克制、专业地描述照片中的伤情，用于事后就医和法律程序参考。
 只输出 JSON（不要任何多余文字、不要 markdown 代码块）：
 {"injury_desc":"若照片显示人体伤情，客观描述部位、形态、大小估计、颜色、推测成因与大致时间；若照片并非人体伤情（如物品、环境、聊天记录等），如实说明'照片中未见明显人体伤情'并简述实际看到的内容","medical_tip":"就医与病历留档建议一句话；无伤情则写'如有伤情请及时就医并留存病历'","suggest_police":"是否建议报警及理由，一句话","timeline":"归档建议，一句话"}
-注意：这是辅助记录，不是医疗诊断；只描述能从图中真实看到的内容，绝不编造图中不存在的伤情。`
+注意：这是辅助记录，不是医疗诊断；只描述能从图中真实看到的内容，绝不编造图中不存在的伤情；所有字段用简体中文。`
 
 const MOCK = {
   injury_desc: '（离线兜底）照片已收到。请尽量在光线充足处补拍近景与含面部的远景各一张，便于后续鉴定。',

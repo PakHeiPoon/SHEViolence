@@ -16,10 +16,11 @@ module.exports = {
   mode: 'cloud',
 
   models: {
-    chat: 'claude-sonnet-4-6',        // 情感陪伴主对话
-    vision: 'qwen3-vl-max',           // 伤情图片多模态
+    chat: 'claude-sonnet-5',          // 情感陪伴主对话 + 看图
+    vision: 'claude-sonnet-5',        // 伤情图片多模态
     reason: 'deepseek-r1',            // 风险评估推理
-    rag: 'deepseek-v3',               // 法律 RAG 生成
+    rag: 'claude-sonnet-5',           // 法律 RAG 生成
+    statement: 'claude-opus-4-8',     // 书面陈述长文
     embedding: 'text-embedding-3-small'
   },
 
