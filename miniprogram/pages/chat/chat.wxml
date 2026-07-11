@@ -37,6 +37,12 @@
         <view class="bubble {{item.role === 'user' ? 'user' : 'ai'}}">
           <image wx:if="{{item.image}}" class="bubble-img" src="{{item.image}}" mode="widthFix" />
           <text wx:if="{{item.content}}">{{item.content}}</text>
+          <view class="sources" wx:if="{{item.sources && item.sources.length}}">
+            <view class="src" wx:for="{{item.sources}}" wx:for-item="s" wx:key="ref"
+              bindtap="copySource" data-url="{{s.url || ''}}">
+              <text class="src-ref">🌐 [{{s.ref}}]</text><text class="src-name">{{s.source}}</text>
+            </view>
+          </view>
         </view>
       </view>
       <view class="card-row" wx:if="{{item.card}}">

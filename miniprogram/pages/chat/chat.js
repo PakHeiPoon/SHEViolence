@@ -131,14 +131,14 @@ Page({
     try {
       const r = await api.chat(messages)
       const parsed = extractCard(r.reply)
-      this.streamReply(parsed.text, parsed.card)
+      this.streamReply(parsed.text, parsed.card, r.sources || [])
     } catch (e) {
-      this.streamReply('我在的。刚才信号不太好，可以再说一遍吗？', null)
+      this.streamReply('我在的。刚才信号不太好，可以再说一遍吗？', null, [])
     }
   },
 
-  // 打字机流式：逐字追加显示，完成后挂结论卡片并存会话
-  streamReply(fullText, card) {
+  // 打字机流式：逐字追加显示，完成后挂结论卡片/联网来源并存会话
+  streamReply(fullText, card, sources) {
     const idx = this.data.messages.length
     this.setData({
       messages: this.data.messages.concat([{ role: 'assistant', content: '', card: null }]),
@@ -152,10 +152,18 @@ Page({
         this._typer = setTimeout(step, 38)
       } else {
         if (card) this.setData({ ['messages[' + idx + '].card']: card })
+        if (sources && sources.length) this.setData({ ['messages[' + idx + '].sources']: sources })
         session.updateMessages(this.data.sid, this.data.messages)
       }
     }
     step()
+  },
+
+  // 点网络来源可复制链接
+  copySource(e) {
+    const url = e.currentTarget.dataset.url
+    if (!url) return
+    wx.setClipboardData({ data: url, success: () => wx.showToast({ title: '来源链接已复制', icon: 'none' }) })
   },
 
   onUnload() { if (this._typer) clearTimeout(this._typer) },

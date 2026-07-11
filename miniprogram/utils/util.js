@@ -38,6 +38,7 @@ function fmtAmount(n) {
 function stripMd(s) {
   return String(s || '')
     .replace(/\[\[CARD[:：][\s\S]*?\]\]/g, '')
+    .replace(/\[\[SEARCH[:：][\s\S]*?\]\]/g, '')
     .replace(/\*\*(.+?)\*\*/g, '$1')
     .replace(/__(.+?)__/g, '$1')
     .replace(/^#{1,4}\s*/gm, '')

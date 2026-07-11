@@ -126,7 +126,7 @@ async function chat(messages) {
         if (hasImage) imageFileID = (await uploadImage(last.image)).fileID
         const msgs = messages.slice(-12).map(x => ({ role: x.role, content: x.content }))
         const r = await callCloud('chat', { messages: msgs, imageFileID })
-        return { reply: r.reply, source: 'cloud' }
+        return { reply: r.reply, sources: r.sources || [], source: 'cloud' }
       }
       const data = await rq('/chat/completions', {
         model: config.models.chat, temperature: 0.7, max_tokens: 600,
