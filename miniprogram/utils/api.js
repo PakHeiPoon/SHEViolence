@@ -50,10 +50,14 @@ function rqRag(path, body) {
   })
 }
 
-// 云函数封装：放宽调用超时（默认15s会掐断图片/长文场景）
+// 云函数封装（不要传非标参数：部分基础库会因未知字段直接抛错导致全线退 mock）
 function callCloud(name, data) {
   return new Promise((resolve, reject) => {
-    wx.cloud.callFunction({ name, data, timeout: 30000, success: r => resolve(r.result), fail: reject })
+    wx.cloud.callFunction({
+      name, data,
+      success: r => resolve(r.result),
+      fail: err => { console.error('[callCloud:' + name + '] 调用失败:', err); reject(err) }
+    })
   })
 }
 
