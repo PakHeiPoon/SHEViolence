@@ -4,7 +4,7 @@
     <view class="tip-icon">🔐</view>
     <view class="tip-text">
       <view class="tip-title">按时间线保管你的证据</view>
-      <view class="tip-sub">拍摄口诀：人＋伤＋时间同框（脸和伤同一张、画面带当天日期）。AI 描述仅辅助记录归档，正式伤情鉴定请凭警方委托书到指定机构办理。演示版本地存储；正式版将端到端加密。</view>
+      <view class="tip-sub">拍摄口诀：人＋伤＋时间同框（脸和伤同一张、画面带当天日期）。AI 描述仅辅助归档，正式伤情鉴定请凭警方委托书到指定机构办理。你的记录只保存在这台手机本地。</view>
     </view>
   </view>
 
