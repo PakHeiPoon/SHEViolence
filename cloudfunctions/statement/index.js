@@ -2,7 +2,7 @@
 const axios = require('axios')
 
 const BASE_URL = 'https://api.openai-next.com/v1'
-const MODELS = ['claude-opus-4-8', 'claude-sonnet-5'] // 主 opus 长文，饱和自动降级
+const MODELS = ['claude-sonnet-5', 'claude-opus-4-8'] // 主 sonnet(快稳)，opus 兜底(opus从腾讯云慢，当主力撞超时)
 
 const STATEMENT_SYSTEM = `你是协助家庭暴力受害者的法律文书助手。我会给你一份按时间整理的证据记录，请据此起草一份可用于报警或起诉的《家庭暴力情况书面陈述》。
 要求：
