@@ -6,8 +6,8 @@ const axios = require('axios')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 
 const BASE_URL = 'https://api.openai-next.com/v1'
-// 主用 opus（实测看图3s）；饱和自动降级 sonnet-5。qwen3-vl-max 平台通道已挂弃用
-const MODELS = ['claude-opus-4-8', 'claude-sonnet-5']
+// 主 sonnet（看图快稳）；opus 兜底。qwen3-vl-max 平台通道已挂弃用
+const MODELS = ['claude-sonnet-5', 'claude-opus-4-8']
 
 const VISION_SYSTEM = `你是协助家暴受害者做证据记录的专业记录员。请客观、克制、专业地描述照片中的伤情，用于事后就医和法律程序参考。
 只输出 JSON（不要任何多余文字、不要 markdown 代码块）：
