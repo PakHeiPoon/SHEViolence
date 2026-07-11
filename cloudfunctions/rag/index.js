@@ -5,7 +5,7 @@ const path = require('path')
 const axios = require('axios')
 
 const BASE_URL = 'https://api.openai-next.com/v1'
-const GEN_MODEL = 'claude-sonnet-5' // 引用纪律更好；deepseek-v3 备选
+const GEN_MODELS = ['claude-opus-4-8', 'claude-sonnet-5'] // 主 opus，饱和自动降级
 const EMB_MODEL = 'text-embedding-3-small'
 const TOP_K = 4
 const MIN_SCORE = 0.25
@@ -73,17 +73,25 @@ exports.main = async (event) => {
     const hits = await retrieve(question)
     const materials = hits.map(h => `[${h.ref}]（来源：${h.source}）${h.text}`).join('\n\n')
 
-    const data = await api('/chat/completions', {
-      model: GEN_MODEL,
-      temperature: 0.2,
-      max_tokens: 700,
-      messages: [
-        { role: 'system', content: RAG_SYSTEM },
-        { role: 'user', content: `【资料】\n${materials || '（未检索到相关资料）'}\n\n【用户问题】${question}` }
-      ]
-    }, 15000)
-
-    const answer = String(data.choices[0].message.content || '').replace(/<think>[\s\S]*?<\/think>/g, '').trim()
+    let answer = ''
+    for (const model of GEN_MODELS) {
+      try {
+        const data = await api('/chat/completions', {
+          model,
+          temperature: 0.2,
+          max_tokens: 700,
+          messages: [
+            { role: 'system', content: RAG_SYSTEM },
+            { role: 'user', content: `【资料】\n${materials || '（未检索到相关资料）'}\n\n【用户问题】${question}` }
+          ]
+        }, 15000)
+        answer = String(data.choices[0].message.content || '').replace(/<think>[\s\S]*?<\/think>/g, '').trim()
+        if (answer) break
+      } catch (e) {
+        console.warn('[rag] ' + model + ' 失败:', e.message)
+      }
+    }
+    if (!answer) throw new Error('全部生成模型失败')
     return {
       answer,
       sources: hits.map(h => ({ ref: h.ref, source: h.source, excerpt: h.text.slice(0, 60) + (h.text.length > 60 ? '…' : ''), score: h.score })),

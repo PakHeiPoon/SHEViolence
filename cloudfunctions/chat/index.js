@@ -5,7 +5,8 @@ cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const axios = require('axios')
 
 const BASE_URL = 'https://api.openai-next.com/v1'
-const MODEL = 'claude-sonnet-5' // 实测：文本3s/看图4s，共情质量更高
+// 主用 opus（质量最高，实测看图3s/150字7s）；通道饱和自动降级 sonnet-5
+const MODELS = ['claude-opus-4-8', 'claude-sonnet-5']
 
 const CHAT_SYSTEM = `你是「暖暖」，一位专业而温柔的家暴危机干预支持者。
 
@@ -63,16 +64,20 @@ exports.main = async (event) => {
     }
   }
 
-  try {
-    const res = await axios.post(BASE_URL + '/chat/completions', {
-      model: MODEL, temperature: 0.7, max_tokens: 600, messages
-    }, {
-      timeout: 15000,
-      headers: { Authorization: 'Bearer ' + process.env.OPENAI_NEXT_KEY }
-    })
-    return { reply: String(res.data.choices[0].message.content).trim(), source: 'cloud' }
-  } catch (e) {
-    console.error('[chat] 降级 mock:', e.message)
-    return { reply: MOCK_REPLY, source: 'cloud-mock' }
+  for (const model of MODELS) {
+    try {
+      const res = await axios.post(BASE_URL + '/chat/completions', {
+        model, temperature: 0.7, max_tokens: 600, messages
+      }, {
+        timeout: 15000,
+        headers: { Authorization: 'Bearer ' + process.env.OPENAI_NEXT_KEY }
+      })
+      const reply = String(res.data.choices[0].message.content).trim()
+      if (reply) return { reply, model, source: 'cloud' }
+    } catch (e) {
+      console.warn('[chat] ' + model + ' 失败:', e.message)
+    }
   }
+  console.error('[chat] 全部模型失败，降级 mock')
+  return { reply: MOCK_REPLY, source: 'cloud-mock' }
 }

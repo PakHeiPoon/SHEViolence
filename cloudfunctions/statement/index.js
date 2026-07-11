@@ -2,7 +2,7 @@
 const axios = require('axios')
 
 const BASE_URL = 'https://api.openai-next.com/v1'
-const MODEL = 'claude-opus-4-8' // 最强长文模型，实测可用
+const MODELS = ['claude-opus-4-8', 'claude-sonnet-5'] // 主 opus 长文，饱和自动降级
 
 const STATEMENT_SYSTEM = `你是协助家庭暴力受害者的法律文书助手。我会给你一份按时间整理的证据记录，请据此起草一份可用于报警或起诉的《家庭暴力情况书面陈述》。
 要求：
@@ -14,22 +14,25 @@ const STATEMENT_SYSTEM = `你是协助家庭暴力受害者的法律文书助手
 
 exports.main = async (event) => {
   const digest = String(event.digest || '（暂无记录）')
-  try {
-    const res = await axios.post(BASE_URL + '/chat/completions', {
-      model: MODEL,
-      temperature: 0.3,
-      max_tokens: 1200,
-      messages: [
-        { role: 'system', content: STATEMENT_SYSTEM },
-        { role: 'user', content: '【证据记录】\n' + digest }
-      ]
-    }, {
-      timeout: 18000,
-      headers: { Authorization: 'Bearer ' + process.env.OPENAI_NEXT_KEY }
-    })
-    return { text: String(res.data.choices[0].message.content).trim(), source: 'cloud' }
-  } catch (e) {
-    console.error('[statement] 生成失败:', e.message)
-    return { text: '（生成失败，请检查网络或稍后重试）', source: 'cloud-mock' }
+  for (const model of MODELS) {
+    try {
+      const res = await axios.post(BASE_URL + '/chat/completions', {
+        model,
+        temperature: 0.3,
+        max_tokens: 1200,
+        messages: [
+          { role: 'system', content: STATEMENT_SYSTEM },
+          { role: 'user', content: '【证据记录】\n' + digest }
+        ]
+      }, {
+        timeout: 17000,
+        headers: { Authorization: 'Bearer ' + process.env.OPENAI_NEXT_KEY }
+      })
+      const text = String(res.data.choices[0].message.content).trim()
+      if (text) return { text, model, source: 'cloud' }
+    } catch (e) {
+      console.warn('[statement] ' + model + ' 失败:', e.message)
+    }
   }
+  return { text: '（生成失败，请检查网络或稍后重试）', source: 'cloud-mock' }
 }

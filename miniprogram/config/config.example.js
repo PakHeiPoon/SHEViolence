@@ -16,10 +16,11 @@ module.exports = {
   mode: 'cloud',
 
   models: {
-    chat: 'claude-sonnet-5',          // 情感陪伴主对话 + 看图
-    vision: 'claude-sonnet-5',        // 伤情图片多模态
+    // Claude 系全用 opus-4-8；云函数内置 sonnet-5 自动降级链
+    chat: 'claude-opus-4-8',          // 情感陪伴主对话 + 看图
+    vision: 'claude-opus-4-8',        // 伤情图片多模态
     reason: 'deepseek-r1',            // 风险评估推理
-    rag: 'claude-sonnet-5',           // 法律 RAG 生成
+    rag: 'claude-opus-4-8',           // 法律 RAG 生成
     statement: 'claude-opus-4-8',     // 书面陈述长文
     embedding: 'text-embedding-3-small'
   },
