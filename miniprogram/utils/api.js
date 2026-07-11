@@ -282,20 +282,29 @@ async function transcribe(filePath) {
         if (r && r.text) return { text: r.text, source: 'cloud' }
         throw new Error('asr 云函数返回空')
       }
-      // direct：wx.uploadFile 天然支持 multipart
-      const r = await new Promise((resolve, reject) => {
+      // direct：wx.uploadFile 天然支持 multipart；主 gpt-4o-transcribe，败则 whisper-1
+      const uploadOnce = (model) => new Promise((resolve, reject) => {
         wx.uploadFile({
           url: config.baseUrl + '/audio/transcriptions',
           filePath, name: 'file',
           header: { Authorization: 'Bearer ' + config.apiKey },
-          formData: { model: 'whisper-1', language: 'zh' },
+          formData: { model, language: 'zh', prompt: '这是中文求助语音，请逐字转写。' },
           timeout: config.requestTimeoutMs,
-          success: res => { try { resolve(JSON.parse(res.data)) } catch (e) { reject(e) } },
+          success: res => {
+            try {
+              const j = JSON.parse(res.data)
+              if (j.text) resolve(String(j.text).trim())
+              else reject(new Error('empty'))
+            } catch (e) { reject(e) }
+          },
           fail: reject
         })
       })
-      if (r.text) return { text: String(r.text).trim(), source: 'direct' }
-      throw new Error('asr 响应异常')
+      try {
+        return { text: await uploadOnce('gpt-4o-transcribe'), source: 'direct' }
+      } catch (e1) {
+        return { text: await uploadOnce('whisper-1'), source: 'direct' }
+      }
     } catch (e) {
       console.warn('[api.transcribe] 失败:', e)
     }
