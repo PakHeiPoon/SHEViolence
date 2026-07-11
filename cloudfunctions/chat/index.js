@@ -46,56 +46,60 @@ exports.main = async (event) => {
     raw.map(x => ({ role: x.role, content: String(x.content || '') }))
   )
 
-  // 多模态：最后一条 user 若带图，下载云存储图片转 base64，改成多模态 content
-  if (event.imageFileID) {
-    try {
-      const dl = await cloud.downloadFile({ fileID: event.imageFileID })
-      const b64 = dl.fileContent.toString('base64')
-      const li = messages.length - 1
-      if (messages[li] && messages[li].role === 'user') {
-        messages[li] = {
-          role: 'user',
-          content: [
-            { type: 'text', text: messages[li].content || '你能看看这张照片吗？' },
-            { type: 'image_url', image_url: { url: 'data:image/jpeg;base64,' + b64 } }
-          ]
-        }
-      }
-    } catch (e) {
-      console.error('[chat] 图片下载失败:', e.message)
-    }
-  }
-
   try {
-    // 第一跳：正常回复，或模型自主决定输出 [[SEARCH:...]] 请求联网
-    let reply = await llm(messages, 12000)
-    let sources = []
+    // ── 第二阶段（前端带 searchQuery 回调）：执行搜索 → 带证据生成最终回答 ──
+    if (event.searchQuery) {
+      const webs = await tavily(String(event.searchQuery).slice(0, 60))
+      if (!webs.length) {
+        return { reply: '我刚帮你查了，暂时没查到确切信息。可以拨打 12338，接线员能告诉你属地的具体资源。', sources: [], source: 'cloud' }
+      }
+      const sources = webs.map((w, i) => ({ ref: 'W' + (i + 1), type: 'web', source: w.title, url: w.url }))
+      const materials = webs.map((w, i) => `[W${i + 1}]（${w.title} ${w.url}）${w.content}`).join('\n')
+      if (event.draft) messages.push({ role: 'assistant', content: String(event.draft) })
+      messages.push({ role: 'user', content: '【搜索结果】\n' + materials + '\n\n请基于以上结果用简体中文直接给出最终回复（引用处标注如（W1）），不要说"我查了"之类的过程话，不要再输出SEARCH标记。' })
+      const reply = await llm(messages, 12000)
+      return { reply, sources, source: 'cloud' }
+    }
 
-    // 触发搜索：模型按协议发了 [[SEARCH]] 标记，或嘴上说"帮你查"（协议违规兜底，绝不留死胡同）
+    // ── 第一阶段：正常回复；多模态看图；若需联网则把查询词交回前端展示进度 ──
+    if (event.imageFileID) {
+      try {
+        const dl = await cloud.downloadFile({ fileID: event.imageFileID })
+        const b64 = dl.fileContent.toString('base64')
+        const li = messages.length - 1
+        if (messages[li] && messages[li].role === 'user') {
+          messages[li] = {
+            role: 'user',
+            content: [
+              { type: 'text', text: messages[li].content || '你能看看这张照片吗？' },
+              { type: 'image_url', image_url: { url: 'data:image/jpeg;base64,' + b64 } }
+            ]
+          }
+        }
+      } catch (e) {
+        console.error('[chat] 图片下载失败:', e.message)
+      }
+    }
+
+    const reply = await llm(messages, 12000)
+
+    // 触发搜索：模型按协议发 [[SEARCH]]，或嘴上说"帮你查"（协议违规兜底，绝不留死胡同）
     const sm = reply.match(/\[\[SEARCH[:：]([^\]]+)\]\]/)
     const saidWillSearch = /(帮你查|查一下|我去查|稍等)/.test(reply)
     if (sm || saidWillSearch) {
       const lastUser = raw.length ? String(raw[raw.length - 1].content || '') : ''
-      const query = (sm ? sm[1] : '中国 家暴求助 ' + lastUser).trim().slice(0, 60)
+      const query = (sm ? sm[1] : '家暴求助 ' + lastUser).trim().slice(0, 60)
       const cleaned = reply.replace(/\[\[SEARCH[^\]]*\]\]/g, '').trim()
 
       if (!process.env.TAVILY_KEY) {
-        // 未配搜索 Key：诚实告知 + 给出替代渠道，不留"稍等"死胡同
-        reply = (cleaned ? cleaned + '\n' : '') + '（联网查询暂未开通，你可以拨打 12338 妇女维权热线，接线员能提供当地庇护所和法援机构的具体信息。）'
-      } else {
-        const webs = await tavily(query)
-        if (webs.length) {
-          sources = webs.map((w, i) => ({ ref: 'W' + (i + 1), type: 'web', source: w.title, url: w.url }))
-          const materials = webs.map((w, i) => `[W${i + 1}]（${w.title} ${w.url}）${w.content}`).join('\n')
-          messages.push({ role: 'assistant', content: reply })
-          messages.push({ role: 'user', content: '【搜索结果】\n' + materials + '\n\n请基于以上结果用简体中文直接给出最终回复（引用处标注如（W1）），不要说"我查了"之类的过程话，不要再输出SEARCH标记。' })
-          reply = await llm(messages, 12000) // 第二跳：带证据作答
-        } else {
-          reply = (cleaned ? cleaned + '\n' : '') + '我刚帮你查了，暂时没查到确切信息。可以拨打 12338，接线员能告诉你属地的具体资源。'
-        }
+        // 未配搜索 Key：诚实告知 + 替代渠道，不留"稍等"死胡同
+        return { reply: (cleaned ? cleaned + '\n' : '') + '（联网查询暂未开通，你可以拨打 12338 妇女维权热线，接线员能提供当地庇护所和法援机构的具体信息。）', sources: [], source: 'cloud' }
       }
+      // 把查询词交回前端：展示"正在搜索：xxx"，随后前端二次调用执行搜索
+      return { needSearch: true, query, draft: reply, source: 'cloud' }
     }
-    return { reply, sources, source: 'cloud' }
+
+    return { reply, sources: [], source: 'cloud' }
   } catch (e) {
     console.error('[chat] 全部模型失败，降级 mock:', e.message)
     return { reply: MOCK_REPLY, sources: [], source: 'cloud-mock' }

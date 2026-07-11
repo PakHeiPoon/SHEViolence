@@ -115,7 +115,7 @@ function uploadImage(filePath) {
   })
 }
 
-async function chat(messages) {
+async function chat(messages, onStatus) {
   const m = mode()
   const last = messages[messages.length - 1] || {}
   const hasImage = !!last.image
@@ -125,7 +125,12 @@ async function chat(messages) {
         let imageFileID = ''
         if (hasImage) imageFileID = (await uploadImage(last.image)).fileID
         const msgs = messages.slice(-12).map(x => ({ role: x.role, content: x.content }))
-        const r = await callCloud('chat', { messages: msgs, imageFileID })
+        let r = await callCloud('chat', { messages: msgs, imageFileID })
+        // Agent 决定联网：先亮出搜索词（过程可见），再二次调用执行搜索+撰写
+        if (r && r.needSearch) {
+          if (onStatus) onStatus('🌐 正在搜索：' + r.query + ' …')
+          r = await callCloud('chat', { messages: msgs, searchQuery: r.query, draft: r.draft || '' })
+        }
         return { reply: r.reply, sources: r.sources || [], source: 'cloud' }
       }
       const data = await rq('/chat/completions', {

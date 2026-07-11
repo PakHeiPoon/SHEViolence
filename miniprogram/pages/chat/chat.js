@@ -129,7 +129,7 @@ Page({
     })
 
     try {
-      const r = await api.chat(messages)
+      const r = await api.chat(messages, s => this.setData({ agentStatus: s }))
       const parsed = extractCard(r.reply)
       this.streamReply(parsed.text, parsed.card, r.sources || [])
     } catch (e) {
