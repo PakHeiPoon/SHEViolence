@@ -105,12 +105,24 @@ async function buildDirectMessages(messages) {
   return out
 }
 
+// 上传前压缩：真实照片动辄1-2MB，压到质量40体积减半、看图速度翻倍
+function compressImage(filePath) {
+  return new Promise(resolve => {
+    wx.compressImage({
+      src: filePath, quality: 40,
+      success: r => resolve(r.tempFilePath),
+      fail: () => resolve(filePath) // 压缩失败就用原图，不阻塞
+    })
+  })
+}
+
 // cloud 模式：图片先传云存储拿 fileID，交给云函数下载分析
-function uploadImage(filePath) {
+async function uploadImage(filePath) {
+  const src = await compressImage(filePath)
   return new Promise((resolve, reject) => {
     wx.cloud.uploadFile({
       cloudPath: 'chatimg/' + Date.now() + '_' + Math.floor(Math.random() * 1e6) + '.jpg',
-      filePath, success: resolve, fail: reject
+      filePath: src, success: resolve, fail: reject
     })
   })
 }
@@ -236,11 +248,12 @@ async function vision(filePath, desc) {
   if (m !== 'mock') {
     try {
       if (m === 'cloud') {
-        // 云模式：先传云存储拿 fileID，云函数下载后做多模态分析
+        // 云模式：压缩→传云存储拿 fileID，云函数下载后做多模态分析
+        const src = await compressImage(filePath)
         const up = await new Promise((resolve, reject) => {
           wx.cloud.uploadFile({
             cloudPath: 'evidence/' + Date.now() + '_' + Math.floor(Math.random() * 1e6) + '.jpg',
-            filePath,
+            filePath: src,
             success: resolve,
             fail: reject
           })
