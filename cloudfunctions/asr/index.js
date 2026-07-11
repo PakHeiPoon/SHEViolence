@@ -6,7 +6,9 @@ const FormData = require('form-data')
 
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 
-const MODELS = ['gpt-4o-transcribe', 'whisper-1']
+const VERSION = 'asr-v2-60s'
+// whisper-1 先行（轻量快稳），gpt-4o-transcribe 兜底（质量更好但从腾讯云慢）
+const MODELS = ['whisper-1', 'gpt-4o-transcribe']
 
 async function transcribe(model, buffer) {
   const fd = new FormData()
@@ -16,7 +18,7 @@ async function transcribe(model, buffer) {
   fd.append('prompt', '这是中文求助语音，请逐字转写。')
   const res = await axios.post('https://api.openai-next.com/v1/audio/transcriptions', fd, {
     headers: Object.assign({ Authorization: 'Bearer ' + process.env.OPENAI_NEXT_KEY }, fd.getHeaders()),
-    timeout: 12000,
+    timeout: 25000, // 单模型放宽（需云函数超时配 60s 配合）
     maxBodyLength: Infinity
   })
   return String(res.data.text || '').trim()
@@ -27,17 +29,21 @@ exports.main = async (event) => {
     if (!event.fileID) throw new Error('缺少 fileID')
     const dl = await cloud.downloadFile({ fileID: event.fileID })
 
+    console.log('[asr]', VERSION, '音频大小:', Math.round(dl.fileContent.length / 1024) + 'KB')
+    const tried = []
     for (const model of MODELS) {
       try {
         const text = await transcribe(model, dl.fileContent)
-        if (text) return { text, model, source: 'cloud' }
+        if (text) return { text, model, source: 'cloud', v: VERSION }
+        tried.push(model + ': 空')
       } catch (e) {
+        tried.push(model + ': ' + e.message)
         console.warn('[asr] ' + model + ' 失败:', e.message)
       }
     }
-    return { text: '', source: 'cloud-mock', error: '全部模型转写失败' }
+    return { text: '', source: 'cloud-mock', v: VERSION, error: tried.join(' | ') }
   } catch (e) {
     console.error('[asr] 失败:', e.message)
-    return { text: '', source: 'cloud-mock', error: e.message }
+    return { text: '', source: 'cloud-mock', v: VERSION, error: e.message }
   }
 }
