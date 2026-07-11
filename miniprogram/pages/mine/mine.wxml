@@ -50,11 +50,11 @@
   <!-- 数据与安全 -->
   <view class="card sec fade-up delay-3">
     <view class="sec-title">🛡️ 数据与安全</view>
-    <view class="sec-sub">证据与记录仅存在本机（演示版）；正式版将采用端到端加密云存储，服务器只保存密文。</view>
-    <button class="btn btn-danger clear-btn" bindtap="clearAll">一键清除全部数据</button>
+    <view class="sec-sub">没有账号体系，不建用户档案：聊天、证据时间线、紧急联系人都只保存在这台手机上。与暖芽对话的内容仅用于生成回应，不关联你的身份。</view>
+    <button class="btn btn-danger clear-btn" bindtap="clearAll">一键清除本机全部数据</button>
   </view>
 
-  <view class="about" bindtap="about">关于「港湾」与免责声明</view>
+  <view class="about" bindtap="about">关于「暖芽」与免责声明</view>
 
   <app-dock active="settings" />
 </view>

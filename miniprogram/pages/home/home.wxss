@@ -97,3 +97,8 @@
 .res-name { font-size: 30rpx; font-weight: 700; }
 .res-desc { font-size: 22rpx; color: var(--muted); margin-top: 4rpx; }
 .res-arrow { font-size: 36rpx; color: var(--muted); opacity: 0.6; }
+
+/* 隐私信任条（轻量，不加卡片底） */
+.trust-strip { display: flex; align-items: center; justify-content: center; gap: 10rpx; margin-top: 20rpx; padding: 6rpx 0; }
+.trust-text { font-size: 22rpx; color: var(--muted); }
+.trust-more { font-size: 22rpx; color: #745fc1; }

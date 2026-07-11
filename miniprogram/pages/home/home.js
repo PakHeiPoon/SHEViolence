@@ -53,6 +53,15 @@ Page({
   goRisk() { wx.navigateTo({ url: '/pages/risk/risk' }) },
   goEvidence() { wx.navigateTo({ url: '/pages/evidence/evidence' }) },
   goOrgs() { wx.navigateTo({ url: '/pages/orgs/orgs' }) },
+
+  // 隐私信任条 → 完整说明（口径：只承诺做到的事，不写"不留存/加密"）
+  showPrivacy() {
+    wx.showModal({
+      title: '你的隐私',
+      content: '暖芽没有账号体系，不建用户档案。你的聊天、证据时间线、紧急联系人都只保存在这台手机上，「我的 → 一键清除」可随时全部删除。\n\n与暖芽对话时，内容会交给 AI 模型生成回应，不关联你的身份、不用于其他用途。',
+      showCancel: false, confirmText: '我知道了'
+    })
+  },
   goCommunity() { wx.redirectTo({ url: '/pages/community/community' }) },
 
   toggleCard(e) {

@@ -69,7 +69,7 @@ Page({
       wx.setStorageSync('chat_disclaimer_shown', true)
       wx.showModal({
         title: '温柔的提醒',
-        content: '暖芽是 AI 伙伴，能陪伴你、提供参考信息，但不能替代专业的法律、医疗与心理援助。紧急情况请直接拨打 110 或 12338。对话仅保存在你的手机本地。',
+        content: '暖芽是 AI 伙伴，能陪伴你、提供参考信息，但不能替代专业的法律、医疗与心理援助。你说的话会交给 AI 生成回应，不关联你的身份；聊天记录只保存在这台手机，可随时删除。紧急情况请直接拨打 110 或 12338。',
         showCancel: false, confirmText: '我知道了'
       })
     }

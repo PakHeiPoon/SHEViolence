@@ -51,6 +51,12 @@
     <view class="res-arrow">›</view>
   </view>
 
+  <!-- 隐私信任条 -->
+  <view class="trust-strip fade-up delay-3" bindtap="showPrivacy">
+    <text class="trust-text">🔒 无需登录 · 记录只存本机 · 可一键清空</text>
+    <text class="trust-more">详情 ›</text>
+  </view>
+
   <!-- 科普信息流 -->
   <view class="section-title fade-up delay-3">了解，是保护自己的第一步</view>
   <view class="feed">
