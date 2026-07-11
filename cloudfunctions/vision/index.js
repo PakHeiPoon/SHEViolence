@@ -32,20 +32,11 @@ function parseJsonLoose(s) {
 exports.main = async (event) => {
   try {
     if (!event.fileID) throw new Error('缺少 fileID')
-    // 首选临时URL直链（免云函数上传大包超时）；失败再降级 base64
-    let imageUrlPart = null
-    try {
-      const t = await cloud.getTempFileURL({ fileList: [event.fileID] })
-      const u = (t.fileList && t.fileList[0] && t.fileList[0].tempFileURL) || ''
-      if (u) imageUrlPart = { type: 'image_url', image_url: { url: u } }
-    } catch (e) {
-      console.warn('[vision] 取临时URL失败:', e.message)
-    }
-    if (!imageUrlPart) {
-      const dl = await cloud.downloadFile({ fileID: event.fileID })
-      const b64 = dl.fileContent.toString('base64')
-      imageUrlPart = { type: 'image_url', image_url: { url: 'data:image/jpeg;base64,' + b64 } }
-    }
+    // 中转 API 不支持图片 URL，必须 base64 内嵌
+    const dl = await cloud.downloadFile({ fileID: event.fileID })
+    const b64 = dl.fileContent.toString('base64')
+    console.log('[vision] 图片base64:', Math.round(b64.length * 3 / 4 / 1024) + 'KB')
+    const imageUrlPart = { type: 'image_url', image_url: { url: 'data:image/jpeg;base64,' + b64 } }
 
     for (const model of MODELS) {
       try {
@@ -64,7 +55,7 @@ exports.main = async (event) => {
             }
           ]
         }, {
-          timeout: 15000,
+          timeout: 40000,
           headers: { Authorization: 'Bearer ' + process.env.OPENAI_NEXT_KEY }
         })
         const j = parseJsonLoose(res.data.choices[0].message.content)
