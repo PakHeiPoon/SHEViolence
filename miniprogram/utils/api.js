@@ -276,7 +276,8 @@ async function statement(evidenceList) {
     try {
       if (m === 'cloud') {
         const r = await callCloud('statement', { digest })
-        return { text: r.text, source: 'cloud' }
+        if (r && r.text && !/生成失败|请稍后重试/.test(r.text)) return { text: r.text, source: 'cloud' }
+        throw new Error('statement 云函数未就绪，降级本地草稿')
       }
       const data = await rq('/chat/completions', {
         model: config.models.chat, temperature: 0.3, max_tokens: 1200,
