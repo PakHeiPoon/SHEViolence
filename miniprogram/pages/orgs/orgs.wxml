@@ -1,0 +1,76 @@
+<view class="orgs-page safe-bottom">
+
+  <view class="title-block fade-up">
+    <text class="page-title">求助资源名录</text>
+    <text class="page-subtitle">真人机构与国家热线 · 点击号码即可拨打</text>
+  </view>
+
+  <!-- 国家热线 -->
+  <text class="sec-title fade-up">国家热线</text>
+  <view class="hotline-list fade-up">
+    <view class="hotline-row" wx:for="{{hotlines}}" wx:key="tel" bindtap="call" data-tel="{{item.tel}}" hover-class="press">
+      <view class="hl-icon">{{item.icon}}</view>
+      <view class="hl-copy">
+        <text class="hl-name">{{item.name}}</text>
+        <text class="hl-note">{{item.note}}</text>
+      </view>
+      <text class="hl-tel">{{item.tel}}</text>
+    </view>
+  </view>
+
+  <!-- 全国性机构 -->
+  <text class="sec-title fade-up">全国性救助机构 · {{national.length}} 家</text>
+  <view class="org-list fade-up">
+    <view class="org-card" wx:for="{{national}}" wx:key="tel" bindtap="call" data-tel="{{item.tel}}" hover-class="press">
+      <view class="org-top">
+        <text class="org-name">{{item.name}}</text>
+        <text class="org-city">{{item.city}}</text>
+      </view>
+      <text class="org-desc">{{item.desc}}</text>
+      <view class="org-foot">
+        <text class="org-hours">🕐 {{item.hours}}</text>
+        <text class="org-tel">📞 {{item.show}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 区域性机构（折叠） -->
+  <view class="sec-title toggle fade-up" bindtap="toggleRegional">
+    <text>区域性机构 · {{regional.length}} 家</text>
+    <text class="toggle-mark">{{showRegional ? '收起 ▴' : '展开 ▾'}}</text>
+  </view>
+  <view class="org-list fade-up" wx:if="{{showRegional}}">
+    <view class="org-card slim" wx:for="{{regional}}" wx:key="tel" bindtap="call" data-tel="{{item.tel}}" hover-class="press">
+      <view class="org-top">
+        <text class="org-name">{{item.name}}</text>
+        <text class="org-city">{{item.city}}</text>
+      </view>
+      <text class="org-desc">{{item.desc}}</text>
+      <view class="org-foot"><text class="org-tel">📞 {{item.show}}</text></view>
+    </view>
+  </view>
+
+  <!-- 文书模板 -->
+  <text class="sec-title fade-up">常用文书模板</text>
+  <view class="tpl-list fade-up">
+    <view class="tpl-card" bindtap="copyTpl" data-key="protect" hover-class="press">
+      <view class="tpl-icon">🛡️</view>
+      <view class="tpl-copy">
+        <text class="tpl-name">人身安全保护令申请书</text>
+        <text class="tpl-note">不收费 · 无需先起诉离婚 · 一般72小时内裁定</text>
+      </view>
+      <text class="tpl-act">复制</text>
+    </view>
+    <view class="tpl-card" bindtap="copyTpl" data-key="divorce" hover-class="press">
+      <view class="tpl-icon">📄</view>
+      <view class="tpl-copy">
+        <text class="tpl-name">离婚起诉状（家暴情形）</text>
+        <text class="tpl-note">含损害赔偿请求 ·《民法典》第1079/1091条</text>
+      </view>
+      <text class="tpl-act">复制</text>
+    </view>
+    <view class="tpl-note-line">模板复制后在备忘录填写【】处；正式使用建议由律师或 12348 审阅</view>
+  </view>
+
+  <escape-btn />
+</view>

@@ -52,6 +52,14 @@
           <image wx:if="{{item.image}}" class="msg-img" src="{{item.image}}" mode="widthFix" />
           <text wx:if="{{item.content}}">{{item.content}}</text>
 
+          <!-- 人工介入接管卡（高危命中：本轮只有话术+三个行动按钮） -->
+          <view class="human-card" wx:if="{{item.human}}">
+            <view class="hc-btn hc-110" catchtap="call110">📞 一键报警 110</view>
+            <view class="hc-btn hc-line" catchtap="humanHotline">🤝 接通真人热线</view>
+            <view class="hc-btn hc-hide" catchtap="hideChat">🙈 隐藏此对话</view>
+            <view class="hc-tip">不方便说话？编辑短信发 12110 也能报警</view>
+          </view>
+
           <view class="action-card" wx:if="{{item.card}}">
             <view class="action-card-head"><text>💡 一条可以行动的建议</text></view>
             <view class="action-card-body">{{item.card.summary}}</view>

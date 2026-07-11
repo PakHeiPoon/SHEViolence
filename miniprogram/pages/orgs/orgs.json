@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "求助资源",
+  "usingComponents": {
+    "escape-btn": "/components/escape-btn/escape-btn"
+  }
+}

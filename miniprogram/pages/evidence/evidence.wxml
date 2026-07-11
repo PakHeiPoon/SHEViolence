@@ -4,7 +4,7 @@
     <view class="tip-icon">🔐</view>
     <view class="tip-text">
       <view class="tip-title">按时间线保管你的证据</view>
-      <view class="tip-sub">上传伤情照片，AI 会生成可用于就医和法律程序的专业描述。演示版本地存储；正式版将端到端加密。</view>
+      <view class="tip-sub">拍摄口诀：人＋伤＋时间同框（脸和伤同一张、画面带当天日期）。AI 描述仅辅助记录归档，正式伤情鉴定请凭警方委托书到指定机构办理。演示版本地存储；正式版将端到端加密。</view>
     </view>
   </view>
 
@@ -30,7 +30,7 @@
     <view class="d-row"><text class="d-label">就医建议</text><text class="d-val">{{draft.ai.medical_tip}}</text></view>
     <view class="d-row"><text class="d-label">报警建议</text><text class="d-val">{{draft.ai.suggest_police}}</text></view>
     <view class="d-row"><text class="d-label">归档建议</text><text class="d-val">{{draft.ai.timeline}}</text></view>
-    <view class="d-note">以上为 AI 辅助参考，非医疗诊断</view>
+    <view class="d-note">以上为 AI 辅助记录，非医疗诊断，不能替代司法鉴定机构的正式伤情鉴定</view>
     <view class="d-btns">
       <button class="btn btn-ghost" bindtap="discardDraft">不保存</button>
       <button class="btn btn-primary" bindtap="saveDraft">保存到时间线</button>

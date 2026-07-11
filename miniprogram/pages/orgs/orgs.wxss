@@ -1,0 +1,44 @@
+.orgs-page { min-height: 100vh; padding: 20rpx 0 80rpx; background: var(--bg); }
+
+.title-block { padding: 30rpx 40rpx 8rpx; }
+.page-title { display: block; font-family: "Songti SC", "STSong", "Noto Serif SC", serif; font-size: var(--font-display); font-weight: 700; }
+.page-subtitle { display: block; margin-top: 10rpx; color: var(--muted); font-size: var(--font-meta); }
+.press { transform: scale(0.98); }
+
+.sec-title { display: flex; align-items: center; justify-content: space-between; margin: 40rpx 40rpx 16rpx; font-size: var(--font-section); font-weight: 700; font-family: "Songti SC", "STSong", "Noto Serif SC", serif; }
+.toggle-mark { font-size: var(--font-caption); color: #745fc1; font-weight: 600; }
+
+/* 国家热线 */
+.hotline-list { display: grid; gap: 12rpx; padding: 0 32rpx; }
+.hotline-row { display: flex; align-items: center; gap: 18rpx; padding: 24rpx 26rpx; border: 1rpx solid #efedf1; border-radius: 24rpx; background: #fff; box-shadow: 0 10rpx 28rpx rgba(35,31,45,0.04); }
+.hl-icon { width: 68rpx; height: 68rpx; flex: 0 0 68rpx; display: flex; align-items: center; justify-content: center; border-radius: 20rpx; background: #f9e6e5; font-size: 34rpx; }
+.hotline-row:nth-child(2) .hl-icon { background: #eeebff; }
+.hotline-row:nth-child(3) .hl-icon { background: #eef4f0; }
+.hotline-row:nth-child(4) .hl-icon { background: #fff0e3; }
+.hotline-row:nth-child(5) .hl-icon { background: #eef4f0; }
+.hl-copy { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4rpx; }
+.hl-name { font-size: var(--font-body); font-weight: 700; }
+.hl-note { font-size: var(--font-meta); color: #96929b; }
+.hl-tel { font-size: 40rpx; font-weight: 800; font-family: "Avenir Next", sans-serif; }
+
+/* 机构卡片 */
+.org-list { display: grid; gap: 12rpx; padding: 0 32rpx; }
+.org-card { padding: 24rpx 26rpx; border: 1rpx solid #efedf1; border-radius: 24rpx; background: #fff; box-shadow: 0 10rpx 28rpx rgba(35,31,45,0.04); }
+.org-top { display: flex; align-items: center; justify-content: space-between; gap: 12rpx; }
+.org-name { flex: 1; min-width: 0; font-size: var(--font-body); font-weight: 700; }
+.org-city { flex: 0 0 auto; font-size: var(--font-meta); color: #745fc1; background: #eeebff; padding: 4rpx 16rpx; border-radius: 999rpx; }
+.org-desc { display: block; margin-top: 8rpx; font-size: var(--font-caption); color: #77727c; line-height: 1.55; }
+.org-foot { display: flex; align-items: center; justify-content: space-between; gap: 12rpx; margin-top: 14rpx; }
+.org-hours { font-size: var(--font-meta); color: #96929b; }
+.org-tel { font-size: var(--font-caption); font-weight: 700; color: #1c191f; }
+.org-card.slim .org-desc { margin-top: 6rpx; }
+
+/* 文书模板 */
+.tpl-list { display: grid; gap: 12rpx; padding: 0 32rpx; }
+.tpl-card { display: flex; align-items: center; gap: 18rpx; padding: 26rpx; border: 1rpx solid #e3dbff; border-radius: 24rpx; background: #f3f1ff; }
+.tpl-icon { font-size: 40rpx; }
+.tpl-copy { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4rpx; }
+.tpl-name { font-size: var(--font-body); font-weight: 700; }
+.tpl-note { font-size: var(--font-meta); color: #77727c; }
+.tpl-act { flex: 0 0 auto; font-size: var(--font-caption); font-weight: 700; color: #745fc1; background: #fff; border: 1rpx solid #d7ccff; border-radius: 999rpx; padding: 12rpx 30rpx; }
+.tpl-note-line { padding: 8rpx 10rpx 0; font-size: var(--font-meta); color: #96929b; text-align: center; }

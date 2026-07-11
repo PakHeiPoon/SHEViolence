@@ -14,6 +14,10 @@ const QUICK = {
   legal: ['他这样算家暴吗？', '我该怎么收集证据？', '怎么申请人身安全保护令？', '起诉离婚要准备什么？']
 }
 
+// 人工介入接管话术（《家暴高危词识别与人工介入触发》skill 标准模板：本轮只输出此内容，不追问不科普）
+const HUMAN_SCRIPT = '你告诉我的这些，需要很大勇气。\n\n你现在的处境，已经超出了我能帮你的范围。我想帮你接一位真人——她们更懂怎么帮你。\n\n在接通之前，我先确认一件事：\n你现在人在哪里？身边安全吗？'
+const HOLD_KEY = 'crisis_hold_until' // 命中 L4/L3 后 24h 内求助入口保持可见（"她说安全≠她安全"）
+
 // 结论卡片（仅陪伴模式）：优先 AI 的 [[CARD:摘要]]，否则强行动词兜底；过程话不出卡
 const STRONG_HINTS = ['报警', '110', '12338', '保护令', '证据', '取证', '告诫书', '验伤', '庇护', '离开', '安全计划']
 function extractCard(reply) {
@@ -73,10 +77,13 @@ Page({
 
   onUnload() { if (this._typer) clearTimeout(this._typer) },
 
+  // 24h 高危保持期内，求助 Banner 至少 level 2 可见
+  holdLevel() { return (wx.getStorageSync(HOLD_KEY) || 0) > Date.now() ? 2 : 0 },
+
   loadCurrent() {
     const sid = session.currentId()
     const s = session.get(sid)
-    this.setData({ sid, messages: s ? s.messages : [], crisisLevel: 0, toView: 'anchor-bottom' })
+    this.setData({ sid, messages: s ? s.messages : [], crisisLevel: this.holdLevel(), toView: 'anchor-bottom' })
   },
 
   // ---------- Agent 模式切换 ----------
@@ -95,13 +102,13 @@ Page({
   closeSessions() { this.setData({ showSessions: false }) },
   newSession() {
     const s = session.create()
-    this.setData({ sid: s.id, messages: [], showSessions: false, crisisLevel: 0 })
+    this.setData({ sid: s.id, messages: [], showSessions: false, crisisLevel: this.holdLevel() })
   },
   switchSession(e) {
     const id = e.currentTarget.dataset.id
     session.setCurrent(id)
     const s = session.get(id)
-    this.setData({ sid: id, messages: s ? s.messages : [], showSessions: false, crisisLevel: 0, toView: 'anchor-bottom' })
+    this.setData({ sid: id, messages: s ? s.messages : [], showSessions: false, crisisLevel: this.holdLevel(), toView: 'anchor-bottom' })
   },
   delSession(e) {
     const id = e.currentTarget.dataset.id
@@ -132,11 +139,21 @@ Page({
     const image = mode === 'companion' ? this.data.imagePath : ''
     if ((!text && !image) || this.data.aiTyping) return
 
-    const crisis = mode === 'companion' ? api.detectCrisis(text) : { level: 0 }
+    // 两种模式都做本地高危检测（毫秒级、确定性；词表 data/crisis-words.js 来自高危词skill）
+    const crisis = api.detectCrisis(text)
     if (crisis.level >= 3) wx.vibrateShort({ type: 'heavy' })
 
     const userMsg = image ? { role: 'user', content: text, image } : { role: 'user', content: text }
     const messages = this.data.messages.concat([userMsg])
+
+    // L4/L3 命中 → 中断一切 AI 流程，本轮只输出人工介入接管卡（宁可误触发，不可漏判）
+    if (crisis.level >= 3) {
+      wx.setStorageSync(HOLD_KEY, Date.now() + 24 * 3600 * 1000)
+      this.setData({ messages, inputValue: '', imagePath: '', aiTyping: true, agentStatus: '', crisisLevel: 3, toView: 'anchor-bottom' })
+      setTimeout(() => this.streamReply(HUMAN_SCRIPT, { human: true }), 600)
+      return
+    }
+
     this.setData({
       messages, inputValue: '', imagePath: '', aiTyping: true,
       agentStatus: mode === 'legal' ? '🔍 正在检索 569 篇知识库…' : (image ? '👀 暖芽正在看你发的照片…' : '💛 暖芽正在认真想…'),
@@ -177,6 +194,7 @@ Page({
         this._typer = setTimeout(step, 32)
       } else {
         if (extra && extra.card) this.setData({ ['messages[' + idx + '].card']: extra.card })
+        if (extra && extra.human) this.setData({ ['messages[' + idx + '].human']: true })
         if (extra && extra.sources && extra.sources.length) this.setData({ ['messages[' + idx + '].sources']: extra.sources })
         session.updateMessages(this.data.sid, this.data.messages)
       }
@@ -205,5 +223,21 @@ Page({
   goSos() { wx.navigateTo({ url: '/pages/sos/sos' }) },
   call110() { wx.makePhoneCall({ phoneNumber: '110' }) },
   call12338() { wx.makePhoneCall({ phoneNumber: '12338' }) },
-  closeBanner() { this.setData({ crisisLevel: 0 }) }
+  closeBanner() { this.setData({ crisisLevel: 0 }) },
+
+  // ---------- 人工介入接管卡 ----------
+  // 接通真人热线：真实号码直拨（志愿者排队为后续版本，先接现有公开热线）
+  humanHotline() {
+    const items = ['源众个案热线 177-0124-2202', '妇联维权热线 12338', '白丝带热线 400-0110-391', '查看全部机构名录']
+    const tels = ['17701242202', '12338', '4000110391', '']
+    wx.showActionSheet({
+      itemList: items,
+      success: r => {
+        if (r.tapIndex === 3) wx.navigateTo({ url: '/pages/orgs/orgs' })
+        else if (tels[r.tapIndex]) wx.makePhoneCall({ phoneNumber: tels[r.tapIndex] })
+      }
+    })
+  },
+  // 隐藏此对话：一键回到伪装记账本（清空页面栈，外人拿到手机只见记账）
+  hideChat() { wx.reLaunch({ url: '/pages/disguise/disguise' }) }
 })

@@ -17,7 +17,17 @@
       <text>立即拨打</text>
       <text>›</text>
     </view>
-    <text class="silent-tip">接通后说清：所在地址 · 正在遭受家庭暴力 · 尽量保持通话</text>
+    <text class="silent-tip">接通后先说「我被打了」+ 具体地址（不是"我们吵架了"）</text>
+  </view>
+
+  <!-- 12110 短信报警（不方便说话时） -->
+  <view class="sms-card fade-up delay-1" bindtap="copySms" hover-class="press">
+    <view class="sms-icon">🔇</view>
+    <view class="sms-copy">
+      <text class="sms-title">不方便打电话？短信 12110 报警</text>
+      <text class="sms-note">点这里复制一句话话术，粘贴到短信发给 12110</text>
+    </view>
+    <text class="sms-act">复制</text>
   </view>
 
   <!-- 快速行动格 -->
@@ -39,6 +49,22 @@
       </view>
       <text class="quick-value">120</text>
     </view>
+    <view class="quick-action support" bindtap="call" data-tel="17701242202" hover-class="press">
+      <view class="quick-icon">🤝</view>
+      <view class="quick-copy">
+        <text class="quick-title">源众个案热线 · 真人接听</text>
+        <text class="quick-note">法律援助 · 心理支持 · 紧急救助资金（9:00-17:00）</text>
+      </view>
+      <text class="quick-value small">177-0124-2202</text>
+    </view>
+    <view class="quick-action ribbon" bindtap="call" data-tel="4000110391" hover-class="press">
+      <view class="quick-icon">🎗️</view>
+      <view class="quick-copy">
+        <text class="quick-title">白丝带热线 · 全年无休</text>
+        <text class="quick-note">8:00-22:00 · 男性受害者也可求助</text>
+      </view>
+      <text class="quick-value small">400-0110-391</text>
+    </view>
     <view class="quick-action location" bindtap="showLocation" hover-class="press">
       <view class="quick-icon">📍</view>
       <view class="quick-copy">
@@ -47,6 +73,12 @@
       </view>
       <text class="quick-value arrow">›</text>
     </view>
+  </view>
+
+  <!-- 全部机构名录入口 -->
+  <view class="orgs-link fade-up delay-2" bindtap="goOrgs" hover-class="press">
+    <text>📒 全部救助机构名录 · 14 家全国 + 18 家区域 + 文书模板</text>
+    <text class="orgs-arrow">›</text>
   </view>
 
   <!-- 安全三步 -->

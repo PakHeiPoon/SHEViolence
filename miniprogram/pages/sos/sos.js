@@ -19,6 +19,22 @@ Page({
     wx.makePhoneCall({ phoneNumber: e.currentTarget.dataset.tel })
   },
 
+  // 12110 短信报警话术：复制后粘贴到短信（小程序无法直接代发短信）
+  copySms() {
+    wx.setClipboardData({
+      data: '我被打了，我在【小区名+门牌号】，对方还在现场，请求出警。我不方便接电话，请短信联系。',
+      success: () => wx.showModal({
+        title: '话术已复制',
+        content: '打开短信，新建收件人 12110，粘贴后把【】里改成你的地址再发送。',
+        showCancel: false, confirmText: '知道了'
+      })
+    })
+  },
+
+  goOrgs() {
+    wx.navigateTo({ url: '/pages/orgs/orgs' })
+  },
+
   // 展示当前位置（便于向救助人员描述所在地）
   showLocation() {
     wx.getLocation({

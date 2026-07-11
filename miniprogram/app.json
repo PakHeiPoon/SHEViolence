@@ -9,7 +9,8 @@
     "pages/risk/risk",
     "pages/evidence/evidence",
     "pages/legal/legal",
-    "pages/sos/sos"
+    "pages/sos/sos",
+    "pages/orgs/orgs"
   ],
   "window": {
     "navigationBarBackgroundColor": "#FBFCFC",
