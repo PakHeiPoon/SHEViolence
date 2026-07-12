@@ -1,51 +1,74 @@
-# 暖芽 · 反家暴援助小程序（黑客松 30h）
+# 暖芽 🌱 · 伪装成记账本的反家暴援助小程序
 
-伪装成「简易记账」的反家暴援助工具：密码解锁 → AI 陪伴 + 危机检测 + 法律 RAG + 风险评估 + 证据整理。
+对外它是一个「简易记账」；在金额框输入解锁密码后，它是一套完整的反家暴援助工具——**AI 陪伴与证据整理教练 + 法律 RAG 问答 + 高危人工介入 + 32 家真人救助机构导航**。30 小时黑客松作品。
 
-📋 团队作战文档（实时更新）：Notion + Artifact 链接见群置顶。
+🎬 **演示视频**：[docs/demo.mp4](docs/demo.mp4)（解锁口令 `1234`，在伪装页「金额」框输入后确认）
 
-## 🚀 五分钟跑起来
+## 产品定位
 
-1. **微信开发者工具** → 导入项目 → 选择本目录（已配置正式 AppID `wxa1d2dab09fbf6a15`；登录的微信号需是该小程序的开发者，见 cloudfunctions/README.md 成员管理）
-2. **确认密钥文件存在**：`miniprogram/config/config.js` 与 `rag/config.local.js`（仓库机器上已配好；新队友从群里拿 Key，复制同目录 example 文件填入）
-3. 工具里直接编译即可——对话/风险评估/伤情分析走 **AI 直连**（`urlCheck` 已关）
-4. **法律问答（真 RAG）** 需要本机再跑两条命令（Node 18+，零依赖）：
+AI 不冒充律师和救助者。它做三件事：**情感上接住她 → 当好证据整理教练（教报警话术、告诫书四要素、"人+伤+时间"取证口诀）→ 把她导航到对的真人**（110/12338、源众、白丝带等公开机构）。真实法律意见与危机处置始终指向真人与专业机构。
+
+## 功能全景
+
+| 模块 | 说明 |
+|---|---|
+| 🎭 伪装记账本 | 入口页是可用的记账本；金额框输密码解锁（默认 1234，可改）；全局「快速离开」一键回伪装 |
+| 💬 统一聊天页 | 暖芽陪伴 / 法律援助 顶部一键切换；多会话 + 上下文记忆 + 打字机流式 + Agent 状态可视化 |
+| 🚨 高危人工介入 | 本地毫秒级命中 L4/L3 高危词（自杀意念/正在施暴/掐脖等 70+ 词，词表见 `miniprogram/data/crisis-words.js`）→ **立即中断 AI**，只输出标准接管话术：一键 110 / 接通真人热线 / 隐藏此对话（秒回记账本）；24h 内求助入口保持可见 |
+| ⚖️ 法律问答（真 RAG） | 569 篇语料（家暴裁判文书 + 法规）→ 1939 块 · 256 维向量检索 + Tavily 联网双证据，回答逐点标注（K1）（W2）来源 |
+| 👀 多模态 | 对话发图识别、伤情照片辅助描述（明确标注"非正式鉴定"）、按住说话语音输入 |
+| 📋 安全自查 | Danger Assessment 改编量表 + deepseek-r1 分级建议 |
+| 📁 证据时间线 | 照片/文字按时间线归档（仅存本机）+ 一键生成书面陈述草稿（提示律师审阅） |
+| 📒 求助资源名录 | 5 条国家热线 + 14 家全国 + 18 家区域机构点击拨号；人身安全保护令申请书 / 离婚起诉状模板一键复制 |
+| 🆘 SOS 大字页 | 110 巨字直拨（话术：先说"我被打了"+地址）、12110 短信话术复制、真人热线、紧急联系人 |
+| 🔒 隐私 | 无账号体系、不建用户档案；聊天/证据/联系人只存本机，一键清除；AI 处理不关联身份 |
+
+## 技术架构
+
+```
+微信原生小程序（零 npm 依赖）
+   └─ utils/api.js  三模式自动降级：cloud（云函数）→ direct（直连）→ mock（断网演示不翻车）
+微信云开发（6 个云函数，环境 cloudbase-*）
+   chat 陪伴对话+看图+[[SEARCH]]联网工具 · rag 法律问答 · vision 伤情描述
+   statement 书面陈述 · risk 风险评估 · asr 语音转文字
+   └─ openai-next 中转（OpenAI 兼容协议）+ Tavily Search API
+```
+
+**模型矩阵（全部实测选型）**：chat/vision/statement = `claude-sonnet-5`（主）+ `claude-opus-4-8`（兜底）；rag 生成 = `deepseek-v3` + sonnet 兜底；risk = `deepseek-r1`；asr = `whisper-1` → `gpt-4o-transcribe`；embedding = `text-embedding-3-small`（256 维）。
+
+## 运行说明
+
+**前置**：微信开发者工具（Stable）；Node 18+（仅重建 RAG 索引时需要，运行不需要）。
+
+1. 克隆本仓库，微信开发者工具「导入项目」选择根目录（AppID 用自己的测试号或正式号均可）
+2. 复制密钥模板并填入自己的 Key：
    ```bash
-   node rag/build-index.js   # 首次/语料变更后构建索引
-   node rag/server.js        # 启动检索服务 :3900
+   cp miniprogram/config/config.example.js miniprogram/config/config.js
+   cp rag/config.example.js rag/config.local.js   # 仅重建索引需要
    ```
-5. **演示口令**：伪装页「金额」框输入 `1234` 回车 → 解锁进入真实首页（备用：连点蓝色汇总卡 3 次）
+3. 工具内开通「云开发」，记下环境 ID 填入 `config.js` 的 `cloudEnv`
+4. 部署云函数：右键 `cloudfunctions/` 下 6 个函数 →「上传并部署：云端安装依赖」；每个函数在云开发控制台配置：
+   - 环境变量 `OPENAI_NEXT_KEY`（全部函数）、`TAVILY_KEY`（chat 函数，可选）
+   - **执行超时改为 60 秒**（默认 3s 会导致 AI 调用/图片处理超时降级）
+5. 编译运行；伪装页金额框输 `1234` 解锁
+6. 无 Key 时所有 AI 能力自动降级为预置 mock 回答，全流程仍可完整走通
 
-## 🧭 演示动线（评委版 3 分钟）
+**RAG 语料重建（可选）**：语料放入 `rag/corpus/` 后执行 `node rag/import-corpus.js && node rag/build-index.js`，索引会同步写入 `cloudfunctions/rag/`，重新部署 rag 函数即生效（当前仓库已附带构建好的 1939 块索引，开箱即用）。
 
-记账本记两笔 → 金额框输 1234 解锁【哇点】→ AI 倾诉说"他昨天拿刀威胁我"→ 顶部红色危机 Banner【哇点】→ 切「⚖️ 法律问答」问保护令 → 回答带来源引用【技术点】→ 安全自查出"高危"+行动清单 → 上传伤情照片出专业描述【多模态】→ 点绿色「快速离开」秒回记账本【首尾呼应】
+## 依赖清单
 
-## 📁 目录结构
+| 层 | 依赖 |
+|---|---|
+| 小程序前端 | 无 npm 依赖（微信原生 WXML/WXSS/JS） |
+| 云函数 | `wx-server-sdk ~2.6.3`（chat/vision/asr）、`axios ^1.6.0`（全部）、`form-data ^4.0.0`（asr） |
+| 外部服务 | openai-next API 中转（Claude/DeepSeek/Whisper/Embedding）、Tavily Search、微信云开发（云函数/云存储） |
+| 构建工具 | Node 18+（仅 `rag/build-index.js` 重建向量索引） |
 
-```
-miniprogram/          小程序前端（微信原生）
-  pages/disguise      伪装记账本 + 密码解锁（入口页）
-  pages/home          真实首页：一键求助/功能入口/科普流
-  pages/chat          AI 对话：暖芽陪伴 + 法律RAG 双模式 + 危机检测
-  pages/risk          安全自查（DA 量表 + deepseek-r1 分级）
-  pages/evidence      证据时间线（qwen3-vl 伤情描述）
-  pages/community     互助社群（静态演示数据）
-  pages/mine          匿名身份/紧急联系人/解锁密码/一键清除
-  utils/api.js        AI 统一入口：mock / direct / cloud 三模式自动降级
-  config/config.js    密钥（gitignore，勿提交）
-rag/                  真·RAG：语料→embedding索引→余弦检索→deepseek-v3生成
-  corpus/             📚 语料放这里（队友文档 md/txt 直接丢入后重建索引）
-cloudfunctions/       云函数（等正式 AppID，见其 README）
-```
+## 原创声明
 
-## ⚠️ 当前状态与待办
+本项目全部代码为本团队在黑客松期间原创编写，**不基于任何现有开源项目二次开发**。引用的外部内容仅包括：公开渠道的司法裁判文书与法规文本（RAG 语料）、公益救助机构公开发布的联系方式名录、上表所列 AI 服务 API 与 npm 依赖包。高危词识别规则与救助机构名录由本队成员调研整理。
 
-- ✅ 正式 AppID 已到位；**下一步：管理员开通云开发 → 部署云函数四件套**（步骤见 [cloudfunctions/README.md](cloudfunctions/README.md)，约 15 分钟）
-- 云函数部署完成前：开发者工具用直连模式即可完整演示；真机需开「开发调试」
-- 所有 AI 调用失败自动降级 mock 预置回答——**断网演示不翻车**
+## 安全红线
 
-## 🔐 安全红线
-
-- 两个密钥文件已 gitignore，**不截图、不外发、不提交**
-- 比赛结束后**轮换** openai-next Key
-- 正式号的 AppSecret 任何场景都用不到（云开发原生免鉴权），不要贴给任何人
+- `miniprogram/config/config.js`、`rag/config.local.js` 已 gitignore，密钥不入库、不截图、不外发
+- 赛后轮换 openai-next Key；AppSecret 任何场景不需要（云开发免鉴权），不要生成
